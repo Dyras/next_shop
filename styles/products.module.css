@@ -1,0 +1,33 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 1rem;
+  }
+  
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 1rem;
+  }
+  
+  .imageContainer {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .products h2 {
+    margin: 0.5rem 0;
+  }
+  
+  .products p {
+    margin: 0;
+  }

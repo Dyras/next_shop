@@ -1,13 +1,43 @@
 import { db } from "@/components/firebase"
 import Navbar from "@/components/navbar/navbar";
 import { collection, getDocs } from "firebase/firestore"
+import { useEffect, useState } from "react";
+import Image from 'next/image';
+import styles from '@/styles/products.module.css'
+
 
 export default function Products() {
-getFirestoreDocs()
+const [products, setProducts] = useState<IProduct[]>([])
+
+    useEffect(() => {
+    getFirestoreDocs()
+    .then((data) => {
+        setProducts(data)
+        console.log(data)
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+}, [])
+
     return(
 <>
 <Navbar />
-<div>Test</div>
+<div className={styles.container}>
+    <div className={styles.grid}>
+      {products.map((product) => (
+        <div key={product.id} className={styles.card}>
+          <div className={styles.imageContainer} style={{ position: 'relative' }}>
+            {product.imageUrl && (
+              <Image src={product.imageUrl} alt={product.name} fill style={{ objectFit: 'contain' }} />
+            )}
+          </div>
+          <h2>{product.name}</h2>
+          <p>{product.description}</p>
+        </div>
+      ))}
+    </div>
+    </div>
 </>
 )
 }
@@ -55,7 +85,9 @@ async function getFirestoreDocs() {
     console.log("Error getting document:", error);
 })
 if (Products.length > 0){
-console.log(Products)
+    return Products;
+} else {
+    return [];
 }
 }
 
