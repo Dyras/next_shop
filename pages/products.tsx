@@ -4,6 +4,8 @@ import { collection, getDocs } from "firebase/firestore"
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 import styles from '@/styles/products.module.css'
+import Link from "next/link";
+import { IProduct } from "@/lib/iproduct";
 
 
 export default function Products() {
@@ -32,8 +34,11 @@ const [products, setProducts] = useState<IProduct[]>([])
               <Image src={product.imageUrl} alt={product.name} fill style={{ objectFit: 'contain' }} />
             )}
           </div>
+          <Link href={`/products/${product.id}`}>
           <h2>{product.name}</h2>
+            </Link>
           <p>{product.description}</p>
+
         </div>
       ))}
     </div>
@@ -41,22 +46,7 @@ const [products, setProducts] = useState<IProduct[]>([])
 </>
 )
 }
-export interface IProduct {
-    id: string;
-    name: string;
-    manufacturer?: string;
-    description?: string;
-    articleType: string;
-    country?: string;
-    price: number;
-    rating?: number;
-    imageUrl?: string;
-    outOfStock: boolean;
-    slug: string;
-    publishedAt?: Date;
-    packaging: string;
-    vintage?: number;
-  }
+
 async function getFirestoreDocs() {
     const Products: IProduct[] = []
     const docRef = await getDocs(collection(db, "products"))
