@@ -1,4 +1,5 @@
 import { db } from "@/components/firebase";
+import Navbar from "@/components/navbar/navbar";
 import { IProduct } from "@/lib/iproduct";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -11,6 +12,7 @@ export default function SingleProduct() {
   useEffect(() => {
     const getProduct = async () => {
       const { id } = router.query;
+      
       if (typeof id !== "string") return;
 
       const docRef = doc(db, "products", id);
@@ -27,10 +29,12 @@ export default function SingleProduct() {
     getProduct();
   }, [router.query]);
 
-  if (!product) return <div>Produkten hittades inte</div>;
+  if (!product) return <div><Navbar />
+  Produkten hittades inte</div>;
 
   return (
     <div>
+        <Navbar />
       <div>Produkten hittades</div>
       <div>{product.name}</div>
     </div>
