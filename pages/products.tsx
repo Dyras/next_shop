@@ -1,6 +1,6 @@
 import { db } from "@/components/firebase"
 import Navbar from "@/components/navbar/navbar";
-import { collection, getDocs } from "firebase/firestore"
+import { collection, DocumentData, getDocs, query, Query, QuerySnapshot, where } from "firebase/firestore"
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 import styles from '@/styles/products.module.css'
@@ -10,9 +10,9 @@ import { IProduct } from "@/lib/iproduct";
 
 export default function Products() {
 const [products, setProducts] = useState<IProduct[]>([])
-
+let filter = 'all'
     useEffect(() => {
-    getFirestoreDocs()
+    getFirestoreDocs(filter)
     .then((data) => {
         setProducts(data)
         console.log(data)
@@ -20,7 +20,7 @@ const [products, setProducts] = useState<IProduct[]>([])
     .catch((error) => {
         console.log(error)
     })
-}, [])
+}, [filter])
 
     return(
 <>
@@ -47,12 +47,19 @@ const [products, setProducts] = useState<IProduct[]>([])
 )
 }
 
-async function getFirestoreDocs() {
+async function getFirestoreDocs(filter: string) {
     const Products: IProduct[] = []
-    const docRef = await getDocs(collection(db, "products"))
+    let queryData: Query<DocumentData>
+if (filter === 'all') {
+    queryData = query(collection(db, "products"))
+} else {
+    queryData = query(collection(db, "products"), where("articleType", "==", filter));
+}
+
+    const docRef = await getDocs(queryData)
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
+            // Push everything into the Products array
             Products.push({
                 id: doc.id,
                 name: doc.data().name,
