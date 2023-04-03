@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { db } from "./firebase";
-import { IProductSaved } from "@/lib/iproductsaved";
+import { IProductSaved } from "@/lib/iproduct";
 
 export const cart = atom<IProductSaved[]>([]);
 var ranOrNot = false;
