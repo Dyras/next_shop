@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { cart } from "../cartstorage";
 import { useEffect, useState } from "react";
 
+
 export default function Navbar() {
 	const [cartValue] = useAtom(cart);
 	const [cartTotalLength, setCartTotalLength] = useState(0);
@@ -33,7 +34,7 @@ export default function Navbar() {
 		  </li>
 		  <li>
 			<Link href="/cart">
-			  Kundkorg <div>{cartTotalLength}</div>
+			  Kundkorg <div className="top-0 start-90 translate-bottom badge rounded-pill bg-danger">{cartTotalLength}</div>
 			</Link>
 		  </li>
 		  <li>
