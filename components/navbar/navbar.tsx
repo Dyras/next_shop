@@ -1,11 +1,10 @@
 import Link from "next/link";
-import styles from '../../styles/navbar.module.css'
+import styles from '../../styles/Navbar.module.css'
 import { useAtom } from "jotai";
 import { cart } from "../cartstorage";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
-	console.log("Navbar körs")
 	const [cartValue] = useAtom(cart);
 	const [cartTotalLength, setCartTotalLength] = useState(0);
   
@@ -17,7 +16,7 @@ export default function Navbar() {
 	  }
 	  console.log(totalLength)
 	  setCartTotalLength(totalLength);
-	}, [cartValue],);
+	}, [cartValue]);
   
 	return (
 	  <nav className={styles.nav}>
@@ -34,7 +33,7 @@ export default function Navbar() {
 		  </li>
 		  <li>
 			<Link href="/cart">
-			  Kundkorg ({cartTotalLength})
+			  Kundkorg <div>{cartTotalLength}</div>
 			</Link>
 		  </li>
 		  <li>
