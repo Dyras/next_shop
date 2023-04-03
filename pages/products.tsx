@@ -8,6 +8,7 @@ import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
 
 
+
 export default function Products() {
 const [products, setProducts] = useState<IProduct[]>([])
 let filter = 'all'
@@ -50,7 +51,9 @@ let filter = 'all'
 async function getFirestoreDocs(filter: string) {
     const Products: IProduct[] = []
     let queryData: Query<DocumentData>
-if (filter === 'all') {
+
+
+    if (filter === 'all') {
     queryData = query(collection(db, "products"))
 } else {
     queryData = query(collection(db, "products"), where("articleType", "==", filter));
