@@ -14,3 +14,7 @@ export interface IProduct {
     packaging: string;
     vintage?: number;
   }
+
+  export interface IProductSaved extends IProduct {
+    amount: number;
+  }
