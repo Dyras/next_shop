@@ -14,7 +14,9 @@ export default function Cart() {
 					<div className={styles.card}>
 						<h2>Kundkorg</h2>
 						<div>
-							{cartValue.length > 0 ? (
+							{cartValue.length < 1 ? (
+								<p>Läser in varukorg</p>
+							) : cartValue.length > 0 ? (
 								cartValue.map((item) => (
 									<div key={item.id}>
 										<p>{item.name}</p>

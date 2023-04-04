@@ -1,42 +1,81 @@
 import { db } from "@/components/firebase";
 import Navbar from "@/components/navbar/navbar";
-import { IProduct } from "@/lib/iproduct";
-import { doc, getDoc } from "firebase/firestore";
+import { IProduct, IProductSaved } from "@/lib/iproduct";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { cart } from "@/components/cartstorage";
 
 export default function SingleProduct() {
-  const router = useRouter();
-  const [product, setProduct] = useState<IProduct | null>(null);
+	const router = useRouter();
+	const [product, setProduct] = useState<IProduct | null>(null);
+	const [cartValue, setCartValue] = useAtom(cart);
+	const [amount, setAmount] = useState(0);
 
-  useEffect(() => {
-    const getProduct = async () => {
-      const { id } = router.query;
-      
-      if (typeof id !== "string") return;
+	useEffect(() => {
+		const getProduct = async () => {
+			const { id } = router.query;
 
-      const docRef = doc(db, "products", id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data() as IProduct);
-        setProduct(docSnap.data() as IProduct);
-      } else {
-        console.log("Document not found!");
-        setProduct(null);
-      }
-    };
+			if (typeof id !== "string") return;
 
-    getProduct();
-  }, [router.query]);
+			const docRef = doc(db, "products", id);
+			const docSnap = await getDoc(docRef);
+			if (docSnap.exists()) {
+				console.log("Document data:", docSnap.data() as IProduct);
+				setProduct(docSnap.data() as IProduct);
+			} else {
+				console.log("Document not found!");
+				setProduct(null);
+			}
+		};
+		getProduct();
+	}, [router.query]);
 
-  if (!product) return <div><Navbar />
-  Produkten hittades inte</div>;
+	useEffect(() => {
+		function howManyInCart() {
+			for (let i = 0; i < cartValue.length; i++) {
+				if (cartValue[i].id === product?.id) {
+					setAmount(cartValue[i].amount);
+					break;
+				}
+			}
+		}
+		howManyInCart();
+	}, [cartValue, product]);
 
-  return (
-    <div>
-        <Navbar />
-      <div>Produkten hittades</div>
-      <div>{product.name}</div>
-    </div>
-  );
+	// Add the product to the cart and send it to Firestore
+	function addtoCart() {
+		const userType = "Users";
+		const userId = "qs3bAnzIM8hGzI5c3bueGOweL8E3";
+		setAmount(1);
+		const currentCart = cartValue;
+
+		if (product != undefined) {
+			currentCart.push({ ...product, amount: 1 } as IProductSaved);
+			setCartValue(currentCart);
+			setDoc(doc(db, userType, userId), { cart: currentCart });
+		}
+	}
+
+	if (!product)
+		return (
+			<div>
+				<Navbar />
+				Produkten hittades inte
+			</div>
+		);
+
+	return (
+		<div>
+			<Navbar />
+			<div>Produkten hittades</div>
+			<div>{product.name}</div>
+			{amount != 0 ? (
+				<div>{amount} i kundkorgen</div>
+			) : (
+				<button onClick={addtoCart}>Köp</button>
+			)}
+		</div>
+	);
 }
