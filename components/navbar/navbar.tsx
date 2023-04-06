@@ -9,14 +9,21 @@ export default function Navbar() {
 	const [cartTotalLength, setCartTotalLength] = useState(0);
 
 	useEffect(() => {
-		console.log("cartValue", cartValue);
-		let totalLength = 0;
-		for (let i = 0; i < cartValue.length; i++) {
-			totalLength += cartValue[i].amount;
+		console.log("Running Navbar useEffect");
+		function howManyInCartNav() {
+			let totalLength = 0;
+			for (let i = 0; i < cartValue.length; i++) {
+				totalLength += cartValue[i].amount;
+			}
+			console.log(
+				"Cart length inside Navbar useEffect:",
+				totalLength,
+				" items"
+			);
+			setCartTotalLength(totalLength);
 		}
-		console.log(totalLength);
-		setCartTotalLength(totalLength);
-	}, [cartValue]);
+		howManyInCartNav();
+	}, [cartValue.length, cartValue]);
 
 	return (
 		<nav className={styles.nav}>
