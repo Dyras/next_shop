@@ -1,6 +1,7 @@
 import { db } from "@/components/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { IProductSaved } from "@/lib/iproduct";
 
 export default function Register() {
 	return (
@@ -37,11 +38,19 @@ function registerAccount() {
 
 			const auth = getAuth();
 			createUserWithEmailAndPassword(auth, email, password)
-				.then((userCredential) => {
+				.then(async (userCredential) => {
 					const user = userCredential.user;
+					const tempCart = await getDoc(
+						doc(db, "Temp_Users", localStorage.getItem("id") || "")
+					);
+					let defaultCart: IProductSaved[] = [];
+					if (tempCart.exists()) {
+						defaultCart = tempCart.data()["cart"];
+					}
+
 					setDoc(doc(db, "Users", user.uid), {
 						email: user.email,
-						cart: [],
+						cart: defaultCart,
 						firstSeen: new Date(),
 					});
 				})
