@@ -21,7 +21,10 @@ export default function CartStorage() {
 			} else {
 				console.log("No cart found, creating new one");
 				setCartValue([]);
-				await setDoc(doc(db, userType, userId), { cart: [] });
+				await setDoc(doc(db, userType, userId), {
+					cart: [],
+					firstSeen: new Date(),
+				});
 			}
 		} catch (error) {
 			console.log(error);
