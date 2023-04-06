@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { db } from "./firebase";
 import { IProductSaved } from "@/lib/iproduct";
@@ -9,22 +9,26 @@ var ranOrNot = false;
 export default function CartStorage() {
 	const [cartValue, setCartValue] = useAtom(cart);
 
-	const handleClick = async () => {
+	const fetchUserCart = async () => {
 		try {
-			const fetchedProducts = await getDoc(
-				doc(db, "Users", "qs3bAnzIM8hGzI5c3bueGOweL8E3")
-			);
+			const userId = localStorage.getItem("id") || "";
+			const userType = userId.length === 22 ? "Users" : "Temp_Users";
+
+			const fetchedProducts = await getDoc(doc(db, userType, userId));
 			if (fetchedProducts.exists()) {
+				console.log("Cart found, fetching it");
 				setCartValue(fetchedProducts.data()["cart"]);
 			} else {
-				console.log("No such document!");
+				console.log("No cart found, creating new one");
+				setCartValue([]);
+				await setDoc(doc(db, userType, userId), { cart: [] });
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
 	if (!ranOrNot) {
-		handleClick();
+		fetchUserCart();
 		ranOrNot = true;
 	}
 }

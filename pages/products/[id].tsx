@@ -46,13 +46,15 @@ export default function SingleProduct() {
 
 	// Add the product to the cart and send it to Firestore
 	function addtoCart() {
-		const userType = "Users";
-		const userId = "qs3bAnzIM8hGzI5c3bueGOweL8E3";
+		const userId = localStorage.getItem("id") || "";
+		const userType = userId.length === 22 ? "Users" : "Temp_Users";
 		setAmount(1);
 		const currentCart = cartValue;
 		console.log("Adding item to cart");
 
 		if (product != undefined) {
+			console.log("Product is not undefined");
+			console.log("Current cart length:", currentCart.length);
 			for (let i = 0; i < currentCart.length; i++) {
 				if (currentCart[i].id !== product.id && i === currentCart.length - 1) {
 					currentCart.push({ ...product, amount: 1 } as IProductSaved);
@@ -61,12 +63,18 @@ export default function SingleProduct() {
 					setDoc(doc(db, userType, userId), { cart: currentCart });
 				}
 			}
+			if (currentCart.length === 0) {
+				currentCart.push({ ...product, amount: 1 } as IProductSaved);
+				setCartValue(currentCart);
+				console.log("Cart after editing:", cartValue);
+				setDoc(doc(db, userType, userId), { cart: currentCart });
+			}
 		}
 	}
 
 	function removeFromCart() {
-		const userType = "Users";
-		const userId = "qs3bAnzIM8hGzI5c3bueGOweL8E3";
+		const userType = "Temp_Users";
+		const userId = localStorage.getItem("id") || "";
 		setAmount(0);
 		const currentCart = cartValue;
 

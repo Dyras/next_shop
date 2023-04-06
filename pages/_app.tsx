@@ -11,11 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	// If the user doesn't have an id, give them one
 	useEffect(() => {
 		if (!localStorage.getItem("id")) {
-			localStorage.setItem(
-				"id",
-				Math.random().toString(36).substring(2, 15) +
-					Math.random().toString(36).substring(2, 15)
-			);
+			localStorage.setItem("id", Math.random().toString(36).substring(2, 15));
 		}
 	}, []);
 
