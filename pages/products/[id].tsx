@@ -58,13 +58,25 @@ export default function SingleProduct() {
 		}
 	}
 
-	if (!product)
-		return (
-			<div>
-				<Navbar />
-				Produkten hittades inte
-			</div>
-		);
+	function removeFromCart() {
+		const userType = "Users";
+		const userId = "qs3bAnzIM8hGzI5c3bueGOweL8E3";
+		setAmount(0);
+		const currentCart = cartValue;
+
+		if (product != undefined) {
+			for (let i = 0; i < currentCart.length; i++) {
+				if (currentCart[i].id === product.id) {
+					currentCart.splice(i, 1);
+					break;
+				}
+			}
+			setCartValue(currentCart);
+			setDoc(doc(db, userType, userId), { cart: currentCart });
+		}
+	}
+
+	if (!product) return <Navbar />;
 
 	return (
 		<div>
@@ -72,7 +84,10 @@ export default function SingleProduct() {
 			<div>Produkten hittades</div>
 			<div>{product.name}</div>
 			{amount != 0 ? (
-				<div>{amount} i kundkorgen</div>
+				<div>
+					<div>{amount} i kundkorgen</div>
+					<button onClick={removeFromCart}>Ta bort</button>
+				</div>
 			) : (
 				<button onClick={addtoCart}>Köp</button>
 			)}
