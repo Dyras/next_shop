@@ -22,7 +22,6 @@ export default function SingleProduct() {
 			const docRef = doc(db, "products", id);
 			const docSnap = await getDoc(docRef);
 			if (docSnap.exists()) {
-				console.log("Document data:", docSnap.data() as IProduct);
 				setProduct(docSnap.data() as IProduct);
 			} else {
 				console.log("Document not found!");
@@ -34,6 +33,7 @@ export default function SingleProduct() {
 
 	useEffect(() => {
 		function howManyInCart() {
+			console.log("Calculating how many in cart");
 			for (let i = 0; i < cartValue.length; i++) {
 				if (cartValue[i].id === product?.id) {
 					setAmount(cartValue[i].amount);
@@ -50,11 +50,17 @@ export default function SingleProduct() {
 		const userId = "qs3bAnzIM8hGzI5c3bueGOweL8E3";
 		setAmount(1);
 		const currentCart = cartValue;
+		console.log("Adding item to cart");
 
 		if (product != undefined) {
-			currentCart.push({ ...product, amount: 1 } as IProductSaved);
-			setCartValue(currentCart);
-			setDoc(doc(db, userType, userId), { cart: currentCart });
+			for (let i = 0; i < currentCart.length; i++) {
+				if (currentCart[i].id !== product.id && i === currentCart.length - 1) {
+					currentCart.push({ ...product, amount: 1 } as IProductSaved);
+					setCartValue(currentCart);
+					console.log("Cart after editing:", cartValue);
+					setDoc(doc(db, userType, userId), { cart: currentCart });
+				}
+			}
 		}
 	}
 
@@ -64,6 +70,7 @@ export default function SingleProduct() {
 		setAmount(0);
 		const currentCart = cartValue;
 
+		console.log("Removing item from cart");
 		if (product != undefined) {
 			for (let i = 0; i < currentCart.length; i++) {
 				if (currentCart[i].id === product.id) {
@@ -72,6 +79,7 @@ export default function SingleProduct() {
 				}
 			}
 			setCartValue(currentCart);
+			console.log("Cart after editing:", cartValue);
 			setDoc(doc(db, userType, userId), { cart: currentCart });
 		}
 	}
