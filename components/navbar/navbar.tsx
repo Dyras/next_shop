@@ -12,7 +12,7 @@ export default function Navbar() {
 	const [cartTotalLength, setCartTotalLength] = useState(0);
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
-	const [loginStateValue, setLoginStateValue] = useAtom(loginState);
+	const [, setLoginStateValue] = useAtom(loginState);
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -42,11 +42,7 @@ export default function Navbar() {
 			for (let i = 0; i < cartValue.length; i++) {
 				totalLength += cartValue[i].amount;
 			}
-			console.log(
-				"Cart length inside Navbar useEffect:",
-				totalLength,
-				" items"
-			);
+			console.log("Cart length inside Navbar useEffect:", totalLength, "items");
 			setCartTotalLength(totalLength);
 		}
 		howManyInCartNav();

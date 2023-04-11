@@ -48,7 +48,7 @@ export default function SingleProduct() {
 	// Add the product to the cart and send it to Firestore
 	function addtoCart() {
 		let userId = localStorage.getItem("id") || "";
-		const userType = userId.length === 22 ? "Users" : "Temp_Users";
+		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 		const auth = getAuth();
 		if (auth.currentUser) {
 			userId = auth.currentUser?.uid || "Hmm";
