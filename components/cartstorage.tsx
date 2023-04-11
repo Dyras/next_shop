@@ -26,16 +26,24 @@ export default function CartStorage() {
 		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 
 		const fetchedProducts = await getDoc(doc(db, userType, userId));
+		// For some reason the Jotai atom is always [] on this page
+		// Until I figure out why, I'm using a workaround using two getDoc calls
+		let tempProducts: IProductSaved[] = [];
+		if (userType === "Users") {
+			tempProducts =
+				(
+					await getDoc(doc(db, "Temp_Users", localStorage.getItem("id") || ""))
+				).data()?.cart || [];
+		}
 		if (fetchedProducts.exists()) {
-			let totalLength = 0;
-			for (let i = 0; i < cartValue.length; i++) {
-				totalLength += cartValue[i].amount;
-			}
 			console.log("Cart found, fetching it");
-			if (userId.length === 28 && cartValue.length != 0) {
+			if (userType === "Users" && tempProducts.length > 0) {
 				console.log("Updating cart for logged in user");
 				await setDoc(doc(db, userType, userId), {
-					cart: cartValue,
+					cart: tempProducts,
+				});
+				await setDoc(doc(db, "Temp_Users", localStorage.getItem("id") || ""), {
+					cart: [],
 				});
 			} else {
 				setCartValue(fetchedProducts.data()["cart"]);
