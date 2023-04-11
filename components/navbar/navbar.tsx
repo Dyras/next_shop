@@ -36,13 +36,11 @@ export default function Navbar() {
 	}, [setLoginStateValue]);
 
 	useEffect(() => {
-		console.log("Running Navbar useEffect");
 		function howManyInCartNav() {
 			let totalLength = 0;
 			for (let i = 0; i < cartValue.length; i++) {
 				totalLength += cartValue[i].amount;
 			}
-			console.log("Cart length inside Navbar useEffect:", totalLength, "items");
 			setCartTotalLength(totalLength);
 		}
 		howManyInCartNav();

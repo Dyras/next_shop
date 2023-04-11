@@ -34,7 +34,6 @@ export default function SingleProduct() {
 
 	useEffect(() => {
 		function howManyInCart() {
-			console.log("Calculating how many in cart");
 			for (let i = 0; i < cartValue.length; i++) {
 				if (cartValue[i].id === product?.id) {
 					setAmount(cartValue[i].amount);

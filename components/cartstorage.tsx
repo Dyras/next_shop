@@ -5,7 +5,6 @@ import { IProductSaved } from "@/lib/iproduct";
 import { getAuth } from "firebase/auth";
 
 export const cart = atom<IProductSaved[]>([]);
-var ranOrNot = false;
 
 export default function CartStorage() {
 	const [cartValue, setCartValue] = useAtom(cart);
