@@ -6,7 +6,6 @@ import {
 	getDocs,
 	query,
 	Query,
-	QuerySnapshot,
 	where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";

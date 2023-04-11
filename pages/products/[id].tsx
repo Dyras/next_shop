@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { cart } from "@/components/cartstorage";
+import { getAuth } from "firebase/auth";
 
 export default function SingleProduct() {
 	const router = useRouter();
@@ -46,8 +47,13 @@ export default function SingleProduct() {
 
 	// Add the product to the cart and send it to Firestore
 	function addtoCart() {
-		const userId = localStorage.getItem("id") || "";
+		let userId = localStorage.getItem("id") || "";
 		const userType = userId.length === 22 ? "Users" : "Temp_Users";
+		const auth = getAuth();
+		if (auth.currentUser) {
+			userId = auth.currentUser?.uid || "Hmm";
+			console.log("User id:", userId);
+		}
 		setAmount(1);
 		const currentCart = cartValue;
 		console.log("Adding item to cart");

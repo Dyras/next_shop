@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { db } from "./firebase";
 import { IProductSaved } from "@/lib/iproduct";
+import { getAuth } from "firebase/auth";
 
 export const cart = atom<IProductSaved[]>([]);
 var ranOrNot = false;
@@ -11,8 +12,13 @@ export default function CartStorage() {
 
 	const fetchUserCart = async () => {
 		try {
-			const userId = localStorage.getItem("id") || "";
+			let userId = localStorage.getItem("id") || "";
 			const userType = userId.length === 22 ? "Users" : "Temp_Users";
+			const auth = getAuth();
+			if (auth.currentUser) {
+				userId = auth.currentUser?.uid || "Hmm";
+				console.log("User id:", userId);
+			}
 
 			const fetchedProducts = await getDoc(doc(db, userType, userId));
 			if (fetchedProducts.exists()) {

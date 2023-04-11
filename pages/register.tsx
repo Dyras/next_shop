@@ -65,13 +65,12 @@ function registerAccount() {
 			console.log("Password is invalid");
 		}
 	}
+}
+export function validateEmail(email: string) {
+	const re = /\S+@\S+\.\S+/;
+	return re.test(email);
+}
 
-	function validateEmail(email: string) {
-		const re = /\S+@\S+\.\S+/;
-		return re.test(email);
-	}
-
-	function validatePassword(password: string) {
-		return password.length >= 8 ? true : false;
-	}
+export function validatePassword(password: string) {
+	return password.length >= 8 ? true : false;
 }
