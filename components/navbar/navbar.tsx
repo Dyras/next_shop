@@ -1,41 +1,38 @@
 import Link from "next/link";
 import styles from "../../styles/Navbar.module.css";
-import { atom, useAtom } from "jotai";
-import { cart } from "@/lib/cartatom";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCartAmount } from "@/lib/cartzustandamount";
 import { useCartStore } from "@/lib/cartzustand";
-
-export const loginState = atom<boolean | undefined>(undefined);
+import { useLogin } from "@/lib/cartzustandlogin";
 
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
 	const { cartStore } = useCartStore();
+	const { login, setLogin } = useLogin();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
-	const [, setLoginStateValue] = useAtom(loginState);
 
 	useEffect(() => {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
 				setIsLoggedIn(<div onClick={logOut}>Logga ut</div>);
-				setLoginStateValue(true);
+				setLogin(true);
 			} else {
 				setIsLoggedIn(
 					<div>
 						<Link href={"/login"}>Logga in</Link>
 					</div>
 				);
-				setLoginStateValue(false);
+				setLogin(false);
 			}
 
 			function logOut() {
 				auth.signOut();
 			}
 		});
-	}, [setLoginStateValue]);
+	}, [setLogin]);
 
 	useEffect(() => {
 		function howManyInCartNav() {

@@ -1,11 +1,11 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { validateEmail, validatePassword } from "./register";
-import Navbar, { loginState } from "@/components/navbar/navbar";
-import { useAtom } from "jotai";
+import Navbar from "@/components/navbar/navbar";
 import { useEffect, useState } from "react";
+import { useLogin } from "@/lib/cartzustandlogin";
 
 export default function Login() {
-	const [loginStateValue] = useAtom(loginState);
+	const { login, setLogin } = useLogin();
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 
 	useEffect(() => {
@@ -38,7 +38,7 @@ export default function Login() {
 				);
 			}
 		});
-	}, [loginStateValue]);
+	}, [login]);
 
 	return (
 		<>

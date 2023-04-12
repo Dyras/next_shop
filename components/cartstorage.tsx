@@ -4,15 +4,17 @@ import { IProductSaved } from "@/lib/iproduct";
 import { getAuth } from "firebase/auth";
 import { useCartStore } from "@/lib/cartzustand";
 import { useEffect } from "react";
+import { useCartAmount } from "@/lib/cartzustandamount";
 
 export default function CartStorage() {
 	const { cartStore, setCartStore } = useCartStore();
+	const { cartAmount } = useCartAmount();
+	const auth = getAuth();
 
 	useEffect(() => {
-		console.log("Cart store:", cartStore);
-	}, [cartStore]);
+		console.log("***Cart store:", cartStore);
+	}, [cartStore, auth.currentUser, cartAmount]);
 
-	const auth = getAuth();
 	auth.onAuthStateChanged((user) => {
 		if (user) {
 			console.log("Fetching user cart for logged in user");
@@ -23,7 +25,7 @@ export default function CartStorage() {
 		}
 	});
 
-	const fetchUserCart = async (userId: string) => {
+	async function fetchUserCart(userId: string) {
 		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 
 		const fetchedProducts = await getDoc(doc(db, userType, userId));
@@ -36,9 +38,7 @@ export default function CartStorage() {
 				).data()?.cart || [];
 		}
 		if (fetchedProducts.exists()) {
-			console.log("Cart found, fetching it");
 			if (userType === "Users" && tempProducts.length > 0) {
-				console.log("Updating cart for logged in user");
 				await setDoc(doc(db, userType, userId), {
 					cart: tempProducts,
 				});
@@ -47,7 +47,6 @@ export default function CartStorage() {
 				});
 			} else {
 				setCartStore(fetchedProducts.data()["cart"]);
-				console.log("Cart store:", cartStore);
 			}
 		} else {
 			console.log("No cart found, creating new one");
@@ -58,5 +57,5 @@ export default function CartStorage() {
 				firstSeen: new Date(),
 			});
 		}
-	};
+	}
 }

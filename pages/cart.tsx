@@ -1,7 +1,5 @@
-import { cart } from "@/lib/cartatom";
 import Navbar from "@/components/navbar/navbar";
 import styles from "@/styles/Home.module.css";
-import { useAtom } from "jotai";
 import { useCartStore } from "@/lib/cartzustand";
 
 export default function Cart() {
