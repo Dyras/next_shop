@@ -5,7 +5,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
-import { cart } from "@/components/cartstorage";
+import { cart } from "@/lib/cartatom";
 import { getAuth } from "firebase/auth";
 
 export default function SingleProduct() {

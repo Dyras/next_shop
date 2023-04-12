@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "../../styles/Navbar.module.css";
 import { atom, useAtom } from "jotai";
-import { cart } from "../cartstorage";
+import { cart } from "@/lib/cartatom";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 

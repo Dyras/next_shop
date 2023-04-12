@@ -1,10 +1,9 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { db } from "./firebase";
 import { IProductSaved } from "@/lib/iproduct";
 import { getAuth } from "firebase/auth";
-
-export const cart = atom<IProductSaved[]>([]);
+import { cart } from "@/lib/cartatom";
 
 export default function CartStorage() {
 	const [cartValue, setCartValue] = useAtom(cart);

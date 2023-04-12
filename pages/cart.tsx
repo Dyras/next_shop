@@ -1,4 +1,4 @@
-import { cart } from "@/components/cartstorage";
+import { cart } from "@/lib/cartatom";
 import Navbar from "@/components/navbar/navbar";
 import styles from "@/styles/Home.module.css";
 import { useAtom } from "jotai";
