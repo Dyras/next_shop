@@ -2,9 +2,10 @@ import { cart } from "@/lib/cartatom";
 import Navbar from "@/components/navbar/navbar";
 import styles from "@/styles/Home.module.css";
 import { useAtom } from "jotai";
+import { useCartStore } from "@/lib/cartzustand";
 
 export default function Cart() {
-	const [cartValue] = useAtom(cart);
+	const { cartStore } = useCartStore();
 
 	return (
 		<>
@@ -14,10 +15,10 @@ export default function Cart() {
 					<div className={styles.card}>
 						<h2>Kundkorg</h2>
 						<div>
-							{cartValue.length < 1 ? (
+							{cartStore.length < 1 ? (
 								<p>Läser in varukorg</p>
-							) : cartValue.length > 0 ? (
-								cartValue.map((item) => (
+							) : cartStore.length > 0 ? (
+								cartStore.map((item) => (
 									<div key={item.id}>
 										<p>{item.name}</p>
 										<p>{item.amount}</p>

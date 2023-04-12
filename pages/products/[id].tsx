@@ -4,14 +4,13 @@ import { IProduct, IProductSaved } from "@/lib/iproduct";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
-import { cart } from "@/lib/cartatom";
 import { getAuth } from "firebase/auth";
+import { useCartStore } from "@/lib/cartzustand";
 
 export default function SingleProduct() {
 	const router = useRouter();
 	const [product, setProduct] = useState<IProduct | null>(null);
-	const [cartValue, setCartValue] = useAtom(cart);
+	const { cartStore, setCartStore } = useCartStore();
 	const [amount, setAmount] = useState(0);
 
 	useEffect(() => {
@@ -34,15 +33,15 @@ export default function SingleProduct() {
 
 	useEffect(() => {
 		function howManyInCart() {
-			for (let i = 0; i < cartValue.length; i++) {
-				if (cartValue[i].id === product?.id) {
-					setAmount(cartValue[i].amount);
+			for (let i = 0; i < cartStore.length; i++) {
+				if (cartStore[i].id === product?.id) {
+					setAmount(cartStore[i].amount);
 					break;
 				}
 			}
 		}
 		howManyInCart();
-	}, [cartValue, product]);
+	}, [cartStore, product]);
 
 	// Add the product to the cart and send it to Firestore
 	function addtoCart() {
@@ -54,7 +53,7 @@ export default function SingleProduct() {
 		}
 		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 		setAmount(1);
-		const currentCart = cartValue;
+		const currentCart = cartStore;
 		console.log("Adding item to cart");
 
 		if (product != undefined) {
@@ -63,8 +62,8 @@ export default function SingleProduct() {
 			for (let i = 0; i < currentCart.length; i++) {
 				if (currentCart[i].id !== product.id && i === currentCart.length - 1) {
 					currentCart.push({ ...product, amount: 1 } as IProductSaved);
-					setCartValue(currentCart);
-					console.log("Cart after editing:", cartValue);
+					setCartStore(currentCart);
+					console.log("Cart after editing:", cartStore);
 					console.log("User type:", userType);
 					console.log("User id:", userId);
 					setDoc(doc(db, userType, userId), { cart: currentCart });
@@ -72,8 +71,8 @@ export default function SingleProduct() {
 			}
 			if (currentCart.length === 0) {
 				currentCart.push({ ...product, amount: 1 } as IProductSaved);
-				setCartValue(currentCart);
-				console.log("Cart after editing:", cartValue);
+				setCartStore(currentCart);
+				console.log("Cart after editing:", cartStore);
 				setDoc(doc(db, userType, userId), { cart: currentCart });
 			}
 		}
@@ -88,7 +87,7 @@ export default function SingleProduct() {
 		}
 		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 		setAmount(0);
-		const currentCart = cartValue;
+		const currentCart = cartStore;
 
 		console.log("Removing item from cart");
 		if (product != undefined) {
@@ -98,8 +97,8 @@ export default function SingleProduct() {
 					break;
 				}
 			}
-			setCartValue(currentCart);
-			console.log("Cart after editing:", cartValue);
+			setCartStore(currentCart);
+			console.log("Cart after editing:", cartStore);
 			setDoc(doc(db, userType, userId), { cart: currentCart });
 		}
 	}

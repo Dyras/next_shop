@@ -1,16 +1,19 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useAtom } from "jotai";
 import { db } from "./firebase";
 import { IProductSaved } from "@/lib/iproduct";
 import { getAuth } from "firebase/auth";
-import { cart } from "@/lib/cartatom";
+import { useCartStore } from "@/lib/cartzustand";
+import { useEffect } from "react";
 
 export default function CartStorage() {
-	const [cartValue, setCartValue] = useAtom(cart);
+	const { cartStore, setCartStore } = useCartStore();
+
+	useEffect(() => {
+		console.log("Cart store:", cartStore);
+	}, [cartStore]);
 
 	const auth = getAuth();
 	auth.onAuthStateChanged((user) => {
-		console.log("Cart value:", cartValue);
 		if (user) {
 			console.log("Fetching user cart for logged in user");
 			fetchUserCart(user.uid);
@@ -24,8 +27,7 @@ export default function CartStorage() {
 		const userType = userId.length === 28 ? "Users" : "Temp_Users";
 
 		const fetchedProducts = await getDoc(doc(db, userType, userId));
-		// For some reason the Jotai atom is always [] on this page
-		// Until I figure out why, I'm using a workaround using two getDoc calls
+
 		let tempProducts: IProductSaved[] = [];
 		if (userType === "Users") {
 			tempProducts =
@@ -44,11 +46,13 @@ export default function CartStorage() {
 					cart: [],
 				});
 			} else {
-				setCartValue(fetchedProducts.data()["cart"]);
+				setCartStore(fetchedProducts.data()["cart"]);
+				console.log("Cart store:", cartStore);
 			}
 		} else {
 			console.log("No cart found, creating new one");
-			setCartValue([]);
+			setCartStore([]);
+
 			await setDoc(doc(db, userType, userId), {
 				cart: [],
 				firstSeen: new Date(),

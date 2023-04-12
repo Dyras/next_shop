@@ -4,12 +4,14 @@ import { atom, useAtom } from "jotai";
 import { cart } from "@/lib/cartatom";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
+import { useCartAmount } from "@/lib/cartzustandamount";
+import { useCartStore } from "@/lib/cartzustand";
 
 export const loginState = atom<boolean | undefined>(undefined);
 
 export default function Navbar() {
-	const [cartValue] = useAtom(cart);
-	const [cartTotalLength, setCartTotalLength] = useState(0);
+	const { cartAmount, setCartAmount } = useCartAmount();
+	const { cartStore } = useCartStore();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const [, setLoginStateValue] = useAtom(loginState);
@@ -38,13 +40,14 @@ export default function Navbar() {
 	useEffect(() => {
 		function howManyInCartNav() {
 			let totalLength = 0;
-			for (let i = 0; i < cartValue.length; i++) {
-				totalLength += cartValue[i].amount;
+			for (let i = 0; i < cartStore.length; i++) {
+				totalLength += cartStore[i].amount;
 			}
-			setCartTotalLength(totalLength);
+			setCartAmount(totalLength);
+			console.log("Cart amount:", cartAmount);
 		}
 		howManyInCartNav();
-	}, [cartValue.length, cartValue]);
+	}, [cartStore.length, cartStore, setCartAmount, cartAmount]);
 
 	// Check if user is logged in
 
@@ -61,7 +64,7 @@ export default function Navbar() {
 					<Link href="/cart">
 						Kundkorg
 						<div className="top-0 start-90 translate-bottom badge rounded-pill bg-danger">
-							{cartTotalLength > 0 ? cartTotalLength : null}
+							{cartAmount > 0 ? cartAmount : null}
 						</div>
 					</Link>
 				</li>
