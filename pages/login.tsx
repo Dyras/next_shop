@@ -1,6 +1,5 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { validateEmail, validatePassword } from "./register";
-import Navbar from "@/components/navbar/navbar";
 import { useEffect, useState } from "react";
 import { useLogin } from "@/lib/cartzustandlogin";
 
@@ -42,7 +41,6 @@ export default function Login() {
 
 	return (
 		<>
-			<Navbar />
 			<div>{isLoggedIn}</div>
 		</>
 	);

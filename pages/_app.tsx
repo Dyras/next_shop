@@ -1,9 +1,9 @@
 import CartStorage from "@/components/cartstorage";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
+import Navbar from "@/components/navbar/navbar";
 
 export let ranOrNot = false;
 
@@ -19,5 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
 		CartStorage();
 		ranOrNot = true;
 	}
-	return <Component {...pageProps} />;
+	return (
+		<div>
+			<CartStorage></CartStorage>
+			<Navbar></Navbar>
+			<Component {...pageProps} />
+		</div>
+	);
 }

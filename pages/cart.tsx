@@ -1,4 +1,3 @@
-import Navbar from "@/components/navbar/navbar";
 import styles from "@/styles/Home.module.css";
 import { useCartStore } from "@/lib/cartzustand";
 
@@ -7,7 +6,6 @@ export default function Cart() {
 
 	return (
 		<>
-			<Navbar />
 			<div className={styles.container}>
 				<div className={styles.grid}>
 					<div className={styles.card}>

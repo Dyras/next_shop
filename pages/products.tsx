@@ -1,5 +1,4 @@
 import { db } from "@/components/firebase";
-import Navbar from "@/components/navbar/navbar";
 import {
 	collection,
 	DocumentData,
@@ -30,7 +29,6 @@ export default function Products() {
 
 	return (
 		<>
-			<Navbar />
 			<div className={styles.container}>
 				<div className={styles.grid}>
 					{products.map((product) => (

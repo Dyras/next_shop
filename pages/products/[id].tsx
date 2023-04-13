@@ -1,5 +1,4 @@
 import { db } from "@/components/firebase";
-import Navbar from "@/components/navbar/navbar";
 import { IProduct, IProductSaved } from "@/lib/iproduct";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -103,16 +102,16 @@ export default function SingleProduct() {
 		}
 	}
 
-	if (!product) return <Navbar />;
+	if (!product) return null;
 
 	return (
 		<div>
-			<Navbar />
 			<div>Produkten hittades</div>
 			<div>{product.name}</div>
 			{amount != 0 ? (
 				<div>
 					<div>{amount} i kundkorgen</div>
+
 					<button onClick={removeFromCart}>Ta bort</button>
 				</div>
 			) : (
