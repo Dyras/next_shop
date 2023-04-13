@@ -70,6 +70,13 @@ function loginAccount() {
 				.catch((error) => {
 					const errorCode = error.code;
 					const errorMessage = error.message;
+					console.log("Error:", errorCode, errorMessage);
+
+					if (errorCode === "auth/wrong-password") {
+						alert("Fel lösenord");
+					} else if (errorCode === "auth/user-not-found") {
+						alert("Användaren finns inte");
+					}
 				});
 		}
 	}
