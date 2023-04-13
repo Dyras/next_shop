@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { useCartAmount } from "@/lib/cartzustandamount";
 import { useCartStore } from "@/lib/cartzustand";
 import { useLogin } from "@/lib/cartzustandlogin";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
@@ -12,12 +13,13 @@ export default function Navbar() {
 	const { login, setLogin } = useLogin();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
+	const router = useRouter();
 
 	useEffect(() => {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
-				setIsLoggedIn(<div onClick={logOut}>Logga ut</div>);
+				setIsLoggedIn(<div onClick={useLogOut}>Logga ut</div>);
 				setLogin(true);
 			} else {
 				setIsLoggedIn(
@@ -27,12 +29,12 @@ export default function Navbar() {
 				);
 				setLogin(false);
 			}
-
-			function logOut() {
-				auth.signOut();
-			}
 		});
-	}, [setLogin]);
+		function useLogOut() {
+			auth.signOut();
+			router.push("/");
+		}
+	}, [router, setLogin]);
 
 	useEffect(() => {
 		function howManyInCartNav() {

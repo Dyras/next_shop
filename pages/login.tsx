@@ -2,6 +2,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { validateEmail, validatePassword } from "./register";
 import { useEffect, useState } from "react";
 import { useLogin } from "@/lib/cartzustandlogin";
+import { useRouter } from "next/router";
 
 export default function Login() {
 	const { login, setLogin } = useLogin();
@@ -62,6 +63,9 @@ function loginAccount() {
 				.then((userCredential) => {
 					const user = userCredential.user;
 					console.log("User:", user);
+					// Send the user to the home page
+					const router = useRouter();
+					router.push("/");
 				})
 				.catch((error) => {
 					const errorCode = error.code;
