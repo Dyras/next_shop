@@ -13,6 +13,27 @@ export default function SingleProduct() {
 	const [amount, setAmount] = useState(0);
 
 	useEffect(() => {
+		if (amount > 1) {
+			const auth = getAuth();
+			let userId = localStorage.getItem("id") || "";
+			if (auth.currentUser) {
+				userId = auth.currentUser?.uid || "";
+			}
+			const userType = userId.length === 28 ? "Users" : "Temp_Users";
+			const currentCart = cartStore;
+			for (let i = 0; i < currentCart.length; i++) {
+				if (currentCart[i].id === product?.id) {
+					currentCart[i].amount = amount;
+					break;
+				}
+			}
+			setCartStore(currentCart);
+			setDoc(doc(db, userType, userId), { cart: currentCart });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [amount]);
+
+	useEffect(() => {
 		const getProduct = async () => {
 			const { id } = router.query;
 
@@ -111,7 +132,20 @@ export default function SingleProduct() {
 			{amount != 0 ? (
 				<div>
 					<div>{amount} i kundkorgen</div>
-
+					<select
+						className="select"
+						value={amount}
+						onChange={(e) => setAmount(parseInt(e.target.value))}
+					>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+					</select>
 					<button onClick={removeFromCart}>Ta bort</button>
 				</div>
 			) : (
