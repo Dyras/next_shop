@@ -5,16 +5,11 @@ import { useEffect } from "react";
 import Navbar from "@/components/navbar/navbar";
 import { useCartStore } from "@/lib/cartzustand";
 import { getAuth } from "firebase/auth";
-import { useCartAmount } from "@/lib/cartzustandamount";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/components/firebase";
-import { IProductSaved } from "@/lib/iproduct";
-
-export let ranOrNot = false;
 
 function App({ Component, pageProps }: AppProps) {
 	const { cartStore, setCartStore } = useCartStore();
-	const { cartAmount } = useCartAmount();
 	const auth = getAuth();
 	// If the user doesn't have an id, give them one
 
