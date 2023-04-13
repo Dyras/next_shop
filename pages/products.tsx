@@ -15,7 +15,7 @@ import { IProduct } from "@/lib/iproduct";
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
-	let filter = "all";
+	const [filter, setFilter] = useState("all");
 	useEffect(() => {
 		getFirestoreDocs(filter)
 			.then((data) => {
@@ -27,8 +27,22 @@ export default function Products() {
 			});
 	}, [filter]);
 
+	function clickHandler(choice: string) {
+		console.log("Clicked");
+		setFilter(choice);
+		console.log(filter);
+	}
+
 	return (
 		<>
+			<div>
+				<h1>Filter</h1>
+				<button onClick={() => clickHandler("all")}>Alla</button>
+				<button onClick={() => clickHandler("rott")}>Rött</button>
+				<button onClick={() => clickHandler("vitt")}>Vitt</button>
+				<button onClick={() => clickHandler("rose")}>Rosé</button>
+				<button onClick={() => clickHandler("mousserande")}>Bubbel</button>
+			</div>
 			<div className={styles.container}>
 				<div className={styles.grid}>
 					{products.map((product) => (
