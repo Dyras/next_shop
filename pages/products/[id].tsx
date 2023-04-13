@@ -5,12 +5,14 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCartStore } from "@/lib/cartzustand";
+import { useCartCounter } from "@/lib/cartcounter";
 
 export default function SingleProduct() {
 	const router = useRouter();
 	const [product, setProduct] = useState<IProduct | null>(null);
 	const { cartStore, setCartStore } = useCartStore();
 	const [amount, setAmount] = useState(0);
+	const { count, increment } = useCartCounter();
 
 	useEffect(() => {
 		if (amount > 1) {
@@ -29,6 +31,7 @@ export default function SingleProduct() {
 			}
 			setCartStore(currentCart);
 			setDoc(doc(db, userType, userId), { cart: currentCart });
+			increment();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [amount]);
