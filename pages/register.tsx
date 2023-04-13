@@ -2,6 +2,7 @@ import { db } from "@/components/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { IProductSaved } from "@/lib/iproduct";
+import { useRouter } from "next/router";
 
 export default function Register() {
 	return (
@@ -53,6 +54,8 @@ function registerAccount() {
 						cart: defaultCart,
 						firstSeen: new Date(),
 					});
+					const router = useRouter();
+					router.push("/");
 				})
 				.catch((error) => {
 					const errorCode = error.code;
