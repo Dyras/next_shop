@@ -9,9 +9,11 @@ import { useCartCounter } from "@/lib/cartcounter";
 
 export default function SingleProduct() {
 	const router = useRouter();
+
 	const [product, setProduct] = useState<IProduct | null>(null);
-	const { cartStore, setCartStore } = useCartStore();
 	const [amount, setAmount] = useState(0);
+
+	const { cartStore, setCartStore } = useCartStore();
 	const { count, increment } = useCartCounter();
 
 	useEffect(() => {

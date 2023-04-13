@@ -10,9 +10,9 @@ import { useCartCounter } from "@/lib/cartcounter";
 
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
-	const { cartStore, setCartStore } = useCartStore();
-	const { login, setLogin } = useLogin();
-	const { count, increment } = useCartCounter();
+	const { cartStore } = useCartStore();
+	const { setLogin } = useLogin();
+	const { count } = useCartCounter();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const router = useRouter();
