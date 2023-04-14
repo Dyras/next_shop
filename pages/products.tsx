@@ -12,7 +12,7 @@ import Image from "next/image";
 import styles from "@/styles/products.module.css";
 import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
@@ -63,11 +63,36 @@ export default function Products() {
 		<>
 			<div>
 				<h1>Filter</h1>
-				<button onClick={() => clickHandler("all")}>Alla</button>
-				<button onClick={() => clickHandler("rott")}>Rött</button>
-				<button onClick={() => clickHandler("vitt")}>Vitt</button>
-				<button onClick={() => clickHandler("rose")}>Rosé</button>
-				<button onClick={() => clickHandler("mousserande")}>Bubbel</button>
+				<button
+					className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+					onClick={() => clickHandler("all")}
+				>
+					Alla
+				</button>
+				<button
+					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+					onClick={() => clickHandler("rott")}
+				>
+					Rött
+				</button>
+				<button
+					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+					onClick={() => clickHandler("vitt")}
+				>
+					Vitt
+				</button>
+				<button
+					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+					onClick={() => clickHandler("rose")}
+				>
+					Rosé
+				</button>
+				<button
+					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+					onClick={() => clickHandler("mousserande")}
+				>
+					Bubbel
+				</button>
 			</div>
 			<div className={styles.container}>
 				<div className={styles.grid}>

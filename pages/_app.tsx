@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
@@ -56,6 +55,7 @@ function App({ Component, pageProps }: AppProps) {
 				});
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth.currentUser]);
 
 	return (
