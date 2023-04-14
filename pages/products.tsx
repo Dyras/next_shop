@@ -12,27 +12,30 @@ import Image from "next/image";
 import styles from "@/styles/products.module.css";
 import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
 	const [filter, setFilter] = useState("");
+	const router = useRouter();
 
+	// Set "filter" to the query parameter
+	// If no query parameter, set "filter" to "all"
 	useEffect(() => {
-		// If there is a filter in the query, set the filter to that
 		if (router.query.filter) {
 			setFilter(router.query.filter as string);
 		} else {
 			setFilter("all");
 		}
-	}, []);
+	}, [router.query.filter]);
 
+	// Check if the filter has been updated
+	// Then fetch from Firestore
 	useEffect(() => {
 		if (filter !== "") {
 			getFirestoreDocs(filter)
 				.then((data) => {
 					setProducts(data);
-					console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -40,10 +43,9 @@ export default function Products() {
 		}
 	}, [filter]);
 
+	// Handle the filter buttons being clicked
 	function clickHandler(choice: string) {
-		console.log("Clicked");
 		setFilter(choice);
-		console.log(filter);
 		if (choice !== "all") {
 			router.push({
 				query: { filter: choice },
@@ -111,7 +113,7 @@ async function getFirestoreDocs(filter: string) {
 		);
 	}
 
-	const docRef = await getDocs(queryData)
+	await getDocs(queryData)
 		.then((querySnapshot) => {
 			querySnapshot.forEach((doc) => {
 				// Push everything into the Products array
