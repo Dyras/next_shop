@@ -61,38 +61,39 @@ export default function Products() {
 
 	return (
 		<>
-			<div>
-				<h1>Filter</h1>
-				<button
-					className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
-					onClick={() => clickHandler("all")}
-				>
-					Alla
-				</button>
-				<button
-					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
-					onClick={() => clickHandler("rott")}
-				>
-					Rött
-				</button>
-				<button
-					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
-					onClick={() => clickHandler("vitt")}
-				>
-					Vitt
-				</button>
-				<button
-					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
-					onClick={() => clickHandler("rose")}
-				>
-					Rosé
-				</button>
-				<button
-					className="focus:shadow-outline m-2 h-8 rounded-lg bg-indigo-700 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
-					onClick={() => clickHandler("mousserande")}
-				>
-					Bubbel
-				</button>
+			<div className="flex justify-center pt-8">
+				<div>
+					<button
+						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+						onClick={() => clickHandler("all")}
+					>
+						Alla
+					</button>
+					<button
+						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+						onClick={() => clickHandler("rott")}
+					>
+						Rött
+					</button>
+					<button
+						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+						onClick={() => clickHandler("vitt")}
+					>
+						Vitt
+					</button>
+					<button
+						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+						onClick={() => clickHandler("rose")}
+					>
+						Rosé
+					</button>
+					<button
+						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
+						onClick={() => clickHandler("mousserande")}
+					>
+						Bubbel
+					</button>
+				</div>
 			</div>
 			<div className={styles.container}>
 				<div className={styles.grid}>
