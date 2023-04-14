@@ -1,4 +1,3 @@
-import styles from "@/styles/Home.module.css";
 import { useCartStore } from "@/lib/cartzustand";
 import Image from "next/image";
 
@@ -26,15 +25,36 @@ export default function Cart() {
 								)}
 								<div className="w-32 flex-auto text-sm">
 									<div className="font-bold">{product.name}</div>
-									<div className="truncate">{product.articleType}</div>
+									<div className="truncate">
+										{product.articleType === "vitt"
+											? "Vitt vin"
+											: product.articleType === "rott"
+											? "Rött vin"
+											: product.articleType === "rose"
+											? "Rosévin"
+											: product.articleType === "mousserande"
+											? "Bubbel"
+											: product.articleType === "ol"
+											? "Öl"
+											: product.articleType === "cider"
+											? "Cider"
+											: product.articleType === "sprit"
+											? "Sprit"
+											: product.articleType.charAt(0).toUpperCase() +
+											  product.articleType.slice(1)}
+									</div>
 									<div className="text-orange-400">{product.amount} st</div>
+								</div>
+								<div className="w-18 flex flex-col items-end font-medium">
+									<div className="mb-6 h-4 w-4 cursor-pointer rounded-full text-red-700 hover:bg-red-200"></div>
+									{product.price} kr st
 								</div>
 							</div>
 						))
 					) : (
 						<p>Kundkorgen är tom</p>
 					)}
-					<div className="">Test</div>
+					<div className="">Till betalning</div>
 				</div>
 			</div>
 		</>
