@@ -12,25 +12,49 @@ import Image from "next/image";
 import styles from "@/styles/products.module.css";
 import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
+import router from "next/router";
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
-	const [filter, setFilter] = useState("all");
+	const [filter, setFilter] = useState("");
+
 	useEffect(() => {
-		getFirestoreDocs(filter)
-			.then((data) => {
-				setProducts(data);
-				console.log(data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		// If there is a filter in the query, set the filter to that
+		if (router.query.filter) {
+			setFilter(router.query.filter as string);
+		} else {
+			setFilter("all");
+		}
+	}, []);
+
+	useEffect(() => {
+		if (filter !== "") {
+			getFirestoreDocs(filter)
+				.then((data) => {
+					setProducts(data);
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
 	}, [filter]);
 
 	function clickHandler(choice: string) {
 		console.log("Clicked");
 		setFilter(choice);
 		console.log(filter);
+		if (choice !== "all") {
+			router.push({
+				query: { filter: choice },
+			});
+		} else {
+			const query = { ...router.query };
+			delete query.filter;
+			router.push({
+				query,
+			});
+		}
 	}
 
 	return (
