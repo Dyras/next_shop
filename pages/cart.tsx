@@ -1,14 +1,30 @@
 import { useCartStore } from "@/lib/cartzustand";
+import { getAuth } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function Cart() {
 	const { cartStore } = useCartStore();
+	const [loggedIn, setLoggedIn] = useState(false);
 	const router = useRouter();
+	const auth = getAuth();
 	function initiatePurchase() {
 		console.log("Initiating purchase");
 		localStorage.setItem("validPurchase", "true");
 		router.push("/payment");
+	}
+
+	auth.onAuthStateChanged((user) => {
+		if (user) {
+			setLoggedIn(true);
+		} else {
+			setLoggedIn(false);
+		}
+	});
+
+	function loginWarning() {
+		alert("Du måste logga in!");
 	}
 
 	return (
@@ -61,9 +77,11 @@ export default function Cart() {
 					) : (
 						<p>Kundkorgen är tom</p>
 					)}
-					<button type="button" onClick={initiatePurchase} className="">
-						Betala
-					</button>
+					{loggedIn ? (
+						<button onClick={initiatePurchase}>Till betalning</button>
+					) : (
+						<button onClick={loginWarning}>Till betalning</button>
+					)}
 				</div>
 			</div>
 		</>
