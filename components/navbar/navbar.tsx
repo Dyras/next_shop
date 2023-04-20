@@ -64,9 +64,11 @@ export default function Navbar() {
 				<li>
 					<Link href="/cart">
 						Kundkorg
-						<div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-red-100">
-							{cartAmount > 0 ? cartAmount : null}
-						</div>
+						{cartAmount > 0 ? (
+							<div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-red-100">
+								{cartAmount}
+							</div>
+						) : null}
 					</Link>
 				</li>
 				<li>
