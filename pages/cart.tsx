@@ -2,7 +2,7 @@ import { useCartStore } from "@/lib/cartzustand";
 import { getAuth } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Cart() {
 	const { cartStore } = useCartStore();
@@ -14,13 +14,15 @@ export default function Cart() {
 		router.push("/payment");
 	}
 
-	auth.onAuthStateChanged((user) => {
-		if (user) {
-			setLoggedIn(true);
-		} else {
-			setLoggedIn(false);
-		}
-	});
+	useEffect(() => {
+		auth.onAuthStateChanged((user) => {
+			if (user) {
+				setLoggedIn(true);
+			} else {
+				setLoggedIn(false);
+			}
+		});
+	}, []);
 
 	function loginWarning() {
 		alert("Du måste logga in!");
