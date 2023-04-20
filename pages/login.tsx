@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 export default function Login() {
 	const { login, setLogin } = useLogin();
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
+	const router = useRouter();
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -45,39 +46,39 @@ export default function Login() {
 			<div>{isLoggedIn}</div>
 		</>
 	);
-}
-function loginAccount() {
-	const emailElement = document.getElementById("email") as HTMLInputElement;
-	const passwordElement = document.getElementById(
-		"password"
-	) as HTMLInputElement;
 
-	if (emailElement && passwordElement) {
-		const email = emailElement.value;
-		const password = passwordElement.value;
+	function loginAccount() {
+		const emailElement = document.getElementById("email") as HTMLInputElement;
+		const passwordElement = document.getElementById(
+			"password"
+		) as HTMLInputElement;
 
-		if (validateEmail(email) && validatePassword(password)) {
-			console.log("Email and password are valid");
+		if (emailElement && passwordElement) {
+			const email = emailElement.value;
+			const password = passwordElement.value;
 
-			signInWithEmailAndPassword(getAuth(), email, password)
-				.then((userCredential) => {
-					const user = userCredential.user;
-					console.log("User:", user);
-					// Send the user to the home page
-					const router = useRouter();
-					router.push("/");
-				})
-				.catch((error) => {
-					const errorCode = error.code;
-					const errorMessage = error.message;
-					console.log("Error:", errorCode, errorMessage);
+			if (validateEmail(email) && validatePassword(password)) {
+				console.log("Email and password are valid");
 
-					if (errorCode === "auth/wrong-password") {
-						alert("Fel lösenord");
-					} else if (errorCode === "auth/user-not-found") {
-						alert("Användaren finns inte");
-					}
-				});
+				signInWithEmailAndPassword(getAuth(), email, password)
+					.then((userCredential) => {
+						const user = userCredential.user;
+						console.log("User:", user);
+						// Send the user to the home page
+						console.log("Router:", router);
+						router.push("/");
+					})
+					.catch((error) => {
+						const errorCode = error.code;
+						const errorMessage = error.message;
+
+						if (errorCode === "auth/wrong-password") {
+							alert("Fel lösenord");
+						} else if (errorCode === "auth/user-not-found") {
+							alert("Användaren finns inte");
+						}
+					});
+			}
 		}
 	}
 }
