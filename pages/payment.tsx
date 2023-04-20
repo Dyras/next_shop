@@ -73,15 +73,13 @@ export default function Payment() {
 					});
 				} else {
 					setDoc(doc(db, "Purchase_History", user.uid), {
-						history: [
-							{
-								id: Math.random().toString(36).substring(2, 31),
-								items: cartStore,
-								totalCost: cartStore.reduce((a, b) => a + b.price, 0),
-								totalAmount: cartStore.reduce((a, b) => a + b.amount, 0),
-								date: new Date(),
-							},
-						],
+						history: arrayUnion({
+							id: Math.random().toString(36).substring(2, 31),
+							items: cartStore,
+							totalCost: cartStore.reduce((a, b) => a + b.price, 0),
+							totalAmount: cartStore.reduce((a, b) => a + b.amount, 0),
+							date: new Date(),
+						}),
 					});
 				}
 			}
