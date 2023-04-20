@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function Payment() {
 	const [validPurchase, setValidPurchase] = useState(false);
-	const { cartStore } = useCartStore();
+	const { cartStore, setCartStore } = useCartStore();
 
 	useEffect(() => {
 		if (localStorage.getItem("validPurchase") !== "false") {
@@ -61,7 +61,8 @@ export default function Payment() {
 					doc(db, "Purchase_History", user.uid)
 				);
 
-				if (currentHistory) {
+				if (currentHistory.exists()) {
+					console.log("History exists");
 					updateDoc(doc(db, "Purchase_History", user.uid), {
 						history: arrayUnion({
 							id: Math.random().toString(36).substring(2, 31),
@@ -71,7 +72,12 @@ export default function Payment() {
 							date: new Date(),
 						}),
 					});
+					setDoc(doc(db, "Users", user.uid), {
+						cart: [],
+					});
+					setCartStore([]);
 				} else {
+					console.log("History does not exist");
 					setDoc(doc(db, "Purchase_History", user.uid), {
 						history: arrayUnion({
 							id: Math.random().toString(36).substring(2, 31),
@@ -81,6 +87,10 @@ export default function Payment() {
 							date: new Date(),
 						}),
 					});
+					setDoc(doc(db, "Users", user.uid), {
+						cart: [],
+					});
+					setCartStore([]);
 				}
 			}
 		} else {
