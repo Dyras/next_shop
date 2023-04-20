@@ -1,8 +1,15 @@
 import { useCartStore } from "@/lib/cartzustand";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function Cart() {
 	const { cartStore } = useCartStore();
+	const router = useRouter();
+	function initiatePurchase() {
+		console.log("Initiating purchase");
+		localStorage.setItem("validPurchase", "true");
+		router.push("/payment");
+	}
 
 	return (
 		<>
@@ -54,7 +61,9 @@ export default function Cart() {
 					) : (
 						<p>Kundkorgen är tom</p>
 					)}
-					<div className="">Till betalning</div>
+					<button type="button" onClick={initiatePurchase} className="">
+						Betala
+					</button>
 				</div>
 			</div>
 		</>
