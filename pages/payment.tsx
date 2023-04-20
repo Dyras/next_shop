@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 export default function Payment() {
 	const [validPurchase, setValidPurchase] = useState(false);
 	const { cartStore, setCartStore } = useCartStore();
+	const [handledPurchase, setHandledPurchase] = useState(false);
 
 	useEffect(() => {
 		if (localStorage.getItem("validPurchase") !== "false") {
@@ -16,7 +17,7 @@ export default function Payment() {
 	}, []);
 
 	console.log("validPurchase:", validPurchase);
-	if (validPurchase == true) {
+	if (validPurchase == true && handledPurchase == false) {
 		localStorage.setItem("validPurchase", "false");
 		return (
 			<div>
@@ -34,6 +35,12 @@ export default function Payment() {
 						Betala
 					</button>
 				</form>
+			</div>
+		);
+	} else if (handledPurchase == true) {
+		return (
+			<div>
+				<h1>Din betalning gick igenom! Flyttar dig till bekräftelsesidan...</h1>
 			</div>
 		);
 	} else {
