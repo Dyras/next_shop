@@ -1,28 +1,23 @@
+import { db } from "@/components/firebase";
+import { useCartStore } from "@/lib/cartzustand";
+import { getAuth } from "firebase/auth";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Payment() {
-	let checkIfValidPurchase = "false";
-	const router = useRouter();
+	const [validPurchase, setValidPurchase] = useState(false);
+	const { cartStore } = useCartStore();
 
 	useEffect(() => {
-		if (checkIfValidPurchase !== "true") {
-			router.push("/");
+		if (localStorage.getItem("validPurchase") !== "false") {
+			setValidPurchase(true);
 		}
-	}, [checkIfValidPurchase, router]);
+	}, []);
 
-	console.log("Payment page");
-	try {
-		checkIfValidPurchase = localStorage.getItem("validPurchase") || "false";
-	} catch (error) {
-		console.log("Error in payment.tsx:", error);
-	}
-	if (checkIfValidPurchase === null) {
-		checkIfValidPurchase = "false";
-	}
-
-	console.log("checkIfValidPurchase:", checkIfValidPurchase);
-	if (checkIfValidPurchase == "true") {
+	console.log("validPurchase:", validPurchase);
+	if (validPurchase == true) {
+		localStorage.setItem("validPurchase", "false");
 		return (
 			<div>
 				<h1>Betala</h1>
@@ -41,10 +36,57 @@ export default function Payment() {
 				</form>
 			</div>
 		);
+	} else {
+		return (
+			<div>
+				<h1>Du har inte gjort någon beställning</h1>
+			</div>
+		);
 	}
 
-	function pay() {
-		localStorage.setItem("validPurchase", "false");
-		router.push("/history");
+	async function pay() {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const cardNumberElement = document.getElementById(
+			"cardnumber"
+		) as HTMLInputElement;
+		const expiryDateElement = document.getElementById(
+			"expirydate"
+		) as HTMLInputElement;
+		const cvcElement = document.getElementById("cvc") as HTMLInputElement;
+
+		if (user?.uid) {
+			if (cardNumberElement && expiryDateElement && cvcElement) {
+				const currentHistory = await getDoc(
+					doc(db, "Purchase_History", user.uid)
+				);
+
+				if (currentHistory) {
+					updateDoc(doc(db, "Purchase_History", user.uid), {
+						history: arrayUnion({
+							id: Math.random().toString(36).substring(2, 31),
+							items: cartStore,
+							totalCost: cartStore.reduce((a, b) => a + b.price, 0),
+							totalAmount: cartStore.reduce((a, b) => a + b.amount, 0),
+							date: new Date(),
+						}),
+					});
+				} else {
+					setDoc(doc(db, "Purchase_History", user.uid), {
+						history: [
+							{
+								id: Math.random().toString(36).substring(2, 31),
+								items: cartStore,
+								totalCost: cartStore.reduce((a, b) => a + b.price, 0),
+								totalAmount: cartStore.reduce((a, b) => a + b.amount, 0),
+								date: new Date(),
+							},
+						],
+					});
+				}
+			}
+		} else {
+			console.log("You are not logged in!");
+		}
 	}
 }
