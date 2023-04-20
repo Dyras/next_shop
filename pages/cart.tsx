@@ -10,7 +10,6 @@ export default function Cart() {
 	const router = useRouter();
 	const auth = getAuth();
 	function initiatePurchase() {
-		console.log("Initiating purchase");
 		localStorage.setItem("validPurchase", "true");
 		router.push("/payment");
 	}
@@ -77,11 +76,11 @@ export default function Cart() {
 					) : (
 						<p>Kundkorgen är tom</p>
 					)}
-					{loggedIn ? (
+					{loggedIn && cartStore.length > 0 ? (
 						<button onClick={initiatePurchase}>Till betalning</button>
-					) : (
+					) : !loggedIn && cartStore.length > 0 ? (
 						<button onClick={loginWarning}>Till betalning</button>
-					)}
+					) : null}
 				</div>
 			</div>
 		</>
