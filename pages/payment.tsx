@@ -45,9 +45,15 @@ export default function Payment() {
 			</div>
 		);
 	} else {
+		setTimeout(() => {
+			router.push("/cart");
+		}, 2000);
 		return (
 			<div>
-				<h1>Du har inte gjort någon beställning</h1>
+				<h1>
+					Du har inte gjort någon beställning. Du flyttas nu till din
+					varukorg...
+				</h1>
 			</div>
 		);
 	}
