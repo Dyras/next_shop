@@ -18,15 +18,11 @@ export default function Navbar() {
 	const router = useRouter();
 
 	useEffect(() => {
-		console.log("Recounting navbar number:", cartStore);
-		console.log("Recounting navbar length:", cartStore.length);
-
 		let totalLength = 0;
 		for (let i = 0; i < cartStore.length; i++) {
 			totalLength += cartStore[i].amount;
 		}
 		setCartAmount(totalLength);
-		console.log("Cart amount:", cartAmount);
 	}, [cartAmount, cartStore, cartStore.length, setCartAmount, count]);
 
 	useEffect(() => {

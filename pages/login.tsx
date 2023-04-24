@@ -58,14 +58,10 @@ export default function Login() {
 			const password = passwordElement.value;
 
 			if (validateEmail(email) && validatePassword(password)) {
-				console.log("Email and password are valid");
-
 				signInWithEmailAndPassword(getAuth(), email, password)
 					.then((userCredential) => {
 						const user = userCredential.user;
-						console.log("User:", user);
 						// Send the user to the home page
-						console.log("Router:", router);
 						router.push("/");
 					})
 					.catch((error) => {

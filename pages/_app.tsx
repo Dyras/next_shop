@@ -24,14 +24,11 @@ function App({ Component, pageProps }: AppProps) {
 		}
 
 		async function fetchUserCart(userId: string) {
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-
 			const userType = userId.length === 28 ? "Users" : "Temp_Users";
 
 			const fetchedProducts = await getDoc(doc(db, userType, userId));
 
 			if (fetchedProducts.exists()) {
-				console.log("Cartstore and length 2:", cartStore, cartStore.length);
 				if (userType === "Users" && cartStore.length > 0) {
 					await setDoc(doc(db, userType, userId), {
 						cart: cartStore,
