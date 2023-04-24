@@ -9,6 +9,7 @@ export default function Payment() {
 	const [validPurchase, setValidPurchase] = useState(false);
 	const { cartStore, setCartStore } = useCartStore();
 	const [handledPurchase, setHandledPurchase] = useState(false);
+	const router = useRouter();
 
 	useEffect(() => {
 		if (localStorage.getItem("validPurchase") !== "false") {
@@ -99,6 +100,9 @@ export default function Payment() {
 					});
 					setCartStore([]);
 				}
+				setTimeout(() => {
+					router.push("/history");
+				}, 200);
 			}
 		} else {
 			console.log("You are not logged in!");
