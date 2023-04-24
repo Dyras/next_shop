@@ -11,7 +11,7 @@ import { useCartCounter } from "@/lib/cartcounter";
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
 	const { cartStore } = useCartStore();
-	const { setLogin } = useLogin();
+	const { login, setLogin } = useLogin();
 	const { count } = useCartCounter();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
@@ -29,7 +29,11 @@ export default function Navbar() {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
-				setIsLoggedIn(<div onClick={useLogOut}>Logga ut</div>);
+				setIsLoggedIn(
+					<div>
+						<div onClick={useLogOut}>Logga ut</div>
+					</div>
+				);
 				setLogin(true);
 			} else {
 				setIsLoggedIn(
@@ -70,6 +74,11 @@ export default function Navbar() {
 				<li>
 					<Link href="/about">Om oss</Link>
 				</li>
+				{login ? (
+					<li>
+						<Link href="/history">Historik</Link>
+					</li>
+				) : null}
 				<li>{isLoggedIn}</li>
 			</ul>
 		</nav>
