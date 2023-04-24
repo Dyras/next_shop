@@ -54,6 +54,9 @@ function registerAccount() {
 						cart: defaultCart,
 						firstSeen: new Date(),
 					});
+					setDoc(doc(db, "Purchase_History", user.uid), {
+						history: [],
+					});
 					const router = useRouter();
 					router.push("/");
 				})
