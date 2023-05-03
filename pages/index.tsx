@@ -1,5 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
+import Link from "next/link";
 
 export default function Home() {
 	return (
@@ -17,8 +18,12 @@ export default function Home() {
 					</div>
 					<div>
 						<ul>
-							<li className={styles.wineList}>Rött vin</li>
-							<li className={styles.wineList}>Vitt vin</li>
+							<li className={styles.wineList}>
+								<Link href={"/products?filter=rott"}>Rött vin</Link>
+							</li>
+							<li className={styles.wineList}>
+								<Link href={"/products?filter=vitt"}>Vitt vin</Link>
+							</li>
 						</ul>
 					</div>
 				</main>
