@@ -3,25 +3,52 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { IProductSaved } from "@/lib/iproduct";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function Register() {
-	return (
-		<div>
-			<h1>Register</h1>
-			<form>
-				<input
-					type="email"
-					placeholder="johan.forsberg@my.com"
-					id="email"
-					required
-				/>
-				<input type="password" placeholder="Lösenord" id="password" required />
-				<button type="button" onClick={registerAccount}>
-					Registrera dig
-				</button>
-			</form>
-		</div>
-	);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+	useEffect(() => {
+		const auth = getAuth();
+		auth.onAuthStateChanged((user) => {
+			if (user) {
+				setIsLoggedIn(true);
+			} else {
+				setIsLoggedIn(false);
+			}
+		});
+	}, []);
+
+	if (!isLoggedIn) {
+		return (
+			<div>
+				<h1>Register</h1>
+				<form>
+					<input
+						type="email"
+						placeholder="johan.forsberg@my.com"
+						id="email"
+						required
+					/>
+					<input
+						type="password"
+						placeholder="Lösenord"
+						id="password"
+						required
+					/>
+					<button type="button" onClick={registerAccount}>
+						Registrera dig
+					</button>
+				</form>
+			</div>
+		);
+	} else {
+		return (
+			<div>
+				<h1>Du är redan inloggad!</h1>
+			</div>
+		);
+	}
 }
 
 function registerAccount() {
