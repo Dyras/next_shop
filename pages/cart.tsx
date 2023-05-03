@@ -1,5 +1,6 @@
 import { useCartStore } from "@/lib/cartzustand";
 import { getAuth } from "firebase/auth";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -30,6 +31,9 @@ export default function Cart() {
 
 	return (
 		<>
+			<Head>
+				<title>Johans vinshop - Varukorg</title>
+			</Head>
 			<div className="flex items-center justify-center py-8">
 				<div className=" sticky-0 overflow-y-auto overflow-x-hidden bg-black bg-opacity-90">
 					{cartStore.length > 0 ? (

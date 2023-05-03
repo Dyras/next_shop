@@ -2,6 +2,7 @@ import { db } from "@/components/firebase";
 import { useCartStore } from "@/lib/cartzustand";
 import { getAuth } from "firebase/auth";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -22,6 +23,9 @@ export default function Payment() {
 		localStorage.setItem("validPurchase", "false");
 		return (
 			<div>
+				<Head>
+					<title>Johans vinshop - Betala</title>
+				</Head>
 				<h1>Betala</h1>
 				<form>
 					<input

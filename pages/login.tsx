@@ -66,7 +66,6 @@ export default function Login() {
 					})
 					.catch((error) => {
 						const errorCode = error.code;
-						const errorMessage = error.message;
 
 						if (errorCode === "auth/wrong-password") {
 							alert("Fel lösenord");

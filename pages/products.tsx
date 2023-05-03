@@ -13,14 +13,17 @@ import styles from "@/styles/products.module.css";
 import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
 	const [filter, setFilter] = useState("");
 	const router = useRouter();
+	const [title, setTitle] = useState("");
 
 	// Set "filter" to the query parameter
 	// If no query parameter, set "filter" to "all"
+
 	useEffect(() => {
 		if (router.query.filter) {
 			setFilter(router.query.filter as string);
@@ -61,6 +64,9 @@ export default function Products() {
 
 	return (
 		<>
+			<Head>
+				<title>Johans vinshop - {title}</title>
+			</Head>
 			<div className="flex justify-center pt-8">
 				<div>
 					<button
@@ -124,49 +130,74 @@ export default function Products() {
 			</div>
 		</>
 	);
-}
 
-async function getFirestoreDocs(filter: string) {
-	const Products: IProduct[] = [];
-	let queryData: Query<DocumentData>;
+	async function getFirestoreDocs(filter: string) {
+		const Products: IProduct[] = [];
+		let queryData: Query<DocumentData>;
+		titleChooser(filter as string);
 
-	if (filter === "all") {
-		queryData = query(collection(db, "products"));
-	} else {
-		queryData = query(
-			collection(db, "products"),
-			where("articleType", "==", filter)
-		);
-	}
+		if (filter === "all") {
+			queryData = query(collection(db, "products"));
+		} else {
+			queryData = query(
+				collection(db, "products"),
+				where("articleType", "==", filter)
+			);
+		}
 
-	await getDocs(queryData)
-		.then((querySnapshot) => {
-			querySnapshot.forEach((doc) => {
-				// Push everything into the Products array
-				Products.push({
-					id: doc.id,
-					name: doc.data().name,
-					manufacturer: doc.data().manufacturer,
-					description: doc.data().description,
-					articleType: doc.data().articleType,
-					country: doc.data().country,
-					price: doc.data().price,
-					rating: doc.data().rating,
-					imageUrl: doc.data().imageUrl,
-					outOfStock: doc.data().outOfStock,
-					slug: doc.data().slug,
-					publishedAt: doc.data().publishedAt,
-					packaging: doc.data().packaging,
-					vintage: doc.data().vintage,
+		await getDocs(queryData)
+			.then((querySnapshot) => {
+				querySnapshot.forEach((doc) => {
+					// Push everything into the Products array
+					Products.push({
+						id: doc.id,
+						name: doc.data().name,
+						manufacturer: doc.data().manufacturer,
+						description: doc.data().description,
+						articleType: doc.data().articleType,
+						country: doc.data().country,
+						price: doc.data().price,
+						rating: doc.data().rating,
+						imageUrl: doc.data().imageUrl,
+						outOfStock: doc.data().outOfStock,
+						slug: doc.data().slug,
+						publishedAt: doc.data().publishedAt,
+						packaging: doc.data().packaging,
+						vintage: doc.data().vintage,
+					});
 				});
+			})
+			.catch((error) => {
+				console.log("Error getting document:", error);
 			});
-		})
-		.catch((error) => {
-			console.log("Error getting document:", error);
-		});
-	if (Products.length > 0) {
-		return Products;
-	} else {
-		return [];
+		if (Products.length > 0) {
+			return Products;
+		} else {
+			return [];
+		}
+	}
+	function titleChooser(filter: string) {
+		let title = "";
+		switch (filter) {
+			case "all":
+				title = "Alla viner";
+				break;
+			case "rott":
+				title = "Röda viner";
+				break;
+			case "vitt":
+				title = "Vita viner";
+				break;
+			case "rose":
+				title = "Roséviner";
+				break;
+			case "mousserande":
+				title = "Mousserande viner";
+				break;
+			default:
+				title = "Alla viner";
+				break;
+		}
+		setTitle(title);
 	}
 }
