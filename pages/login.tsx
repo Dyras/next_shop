@@ -3,6 +3,7 @@ import { validateEmail, validatePassword } from "./register";
 import { useEffect, useState } from "react";
 import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Login() {
 	const { login, setLogin } = useLogin();
@@ -13,10 +14,20 @@ export default function Login() {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
-				setIsLoggedIn(<div>Du är redan inloggad!</div>);
+				setIsLoggedIn(
+					<div>
+						<Head>
+							<title>Johans vinshop - Logga in</title>
+						</Head>
+						Du är redan inloggad!
+					</div>
+				);
 			} else {
 				setIsLoggedIn(
 					<div>
+						<Head>
+							<title>Johans vinshop - Logga in</title>
+						</Head>
 						<h1>Logga in</h1>
 						<form>
 							<input

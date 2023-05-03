@@ -7,7 +7,7 @@ export default function Home() {
 		<>
 			<div className={styles.container}>
 				<Head>
-					<title>Next wineshop</title>
+					<title>Johans vinshop</title>
 					<meta name="description" content="Vinsida gjord av Johan Forsberg" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
 					<link rel="icon" href="/favicon.ico" />

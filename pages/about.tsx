@@ -1,8 +1,12 @@
 import styles from "@/styles/Home.module.css";
+import Head from "next/head";
 
 export default function About() {
 	return (
 		<>
+			<Head>
+				<title>Johans vinshop - Om oss</title>
+			</Head>
 			<div
 				className={styles.container}
 				style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}

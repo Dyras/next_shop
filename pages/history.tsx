@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "firebase/firestore";
+import Head from "next/head";
 
 export default function History() {
 	interface History {
@@ -29,11 +30,9 @@ export default function History() {
 			).then((doc) => {
 				if (doc.exists()) {
 					const history = doc.data()["history"];
-					console.log(history);
+
 					return history;
 				} else {
-					console.log("No such document!");
-
 					return [];
 				}
 			});
@@ -50,11 +49,13 @@ export default function History() {
 	function parseDate(timeDate: any) {
 		const date = new Date(timeDate.toDate());
 
-		console.log(date);
 		return date.toLocaleString("sv-SE");
 	}
 	return (
 		<div>
+			<Head>
+				<title>Johans vinshop - Historik</title>
+			</Head>
 			<h1>Historik</h1>
 			{history.map((product) => (
 				<div key={product.id}>

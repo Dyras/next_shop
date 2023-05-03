@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { IProductSaved } from "@/lib/iproduct";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 export default function Register() {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -22,6 +23,9 @@ export default function Register() {
 	if (!isLoggedIn) {
 		return (
 			<div>
+				<Head>
+					<title>Johans vinshop - Registrering</title>
+				</Head>
 				<h1>Register</h1>
 				<form>
 					<input
@@ -45,6 +49,9 @@ export default function Register() {
 	} else {
 		return (
 			<div>
+				<Head>
+					<title>Johans vinshop - Registrering</title>
+				</Head>
 				<h1>Du är redan inloggad!</h1>
 			</div>
 		);
