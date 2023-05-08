@@ -14,12 +14,16 @@ import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import type { NextRequest, NextResponse } from "next/server";
+
+const { client } = require("../lib/contentful");
 
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
 	const [filter, setFilter] = useState("");
 	const router = useRouter();
 	const [title, setTitle] = useState("");
+	const [languageStrings, setLanguageStrings] = useState<any>({});
 
 	// Set "filter" to the query parameter
 	// If no query parameter, set "filter" to "all"
@@ -31,6 +35,26 @@ export default function Products() {
 			setFilter("all");
 		}
 	}, [router.query.filter]);
+
+	useEffect(() => {
+		// Check user locale
+
+		async function checkLanguage() {
+			const locale = window.navigator.language;
+			let language;
+			if (locale.startsWith("sv")) {
+				// Get entry 645bikC48FQqmGFdc9Iejv
+				language = await client.getEntry("645bikC48FQqmGFdc9Iejv", {
+					locale: "sv",
+				});
+			} else {
+				language = client.getEntry("645bikC48FQqmGFdc9Iejv", { locale: "sv" });
+			}
+			console.log(language);
+			setLanguageStrings(language?.items[0]?.fields?.filters);
+		}
+		checkLanguage();
+	}, []);
 
 	// Check if the filter has been updated
 	// Then fetch from Firestore
@@ -62,6 +86,9 @@ export default function Products() {
 		}
 	}
 
+	// Check user locale
+
+	console.log(languageStrings);
 	return (
 		<>
 			<Head>
@@ -73,31 +100,31 @@ export default function Products() {
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("all")}
 					>
-						Alla
+						{languageStrings[0]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rott")}
 					>
-						Rött
+						{languageStrings[1]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("vitt")}
 					>
-						Vitt
+						{languageStrings[2]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rose")}
 					>
-						Rosé
+						{languageStrings[3]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("mousserande")}
 					>
-						Bubbel
+						{languageStrings[4]}
 					</button>
 				</div>
 			</div>
