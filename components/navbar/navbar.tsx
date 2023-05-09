@@ -8,6 +8,8 @@ import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
 import { useCartCounter } from "@/lib/cartcounter";
 
+const { client } = require("../../lib/contentful");
+
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
 	const { cartStore } = useCartStore();
@@ -16,6 +18,41 @@ export default function Navbar() {
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const router = useRouter();
+	const [languageStrings, setLanguageStrings] = useState<any>([
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+	]);
+
+	useEffect(() => {
+		// Check user locale
+
+		async function checkLanguage() {
+			const locale = window.navigator.language;
+			if (locale.startsWith("sv")) {
+				// Get entry 645bikC48FQqmGFdc9Iejv
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "sv",
+					})
+					.then((data: { fields: { navbar: string } }) => {
+						setLanguageStrings(data?.fields?.navbar);
+					});
+			} else {
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "en",
+					})
+					.then((data: { fields: { navbar: string } }) => {
+						setLanguageStrings(data?.fields?.navbar);
+					});
+			}
+		}
+		checkLanguage();
+	}, []);
 
 	useEffect(() => {
 		let totalLength = 0;
@@ -31,14 +68,14 @@ export default function Navbar() {
 			if (user) {
 				setIsLoggedIn(
 					<div>
-						<div onClick={useLogOut}>Logga ut</div>
+						<div onClick={useLogOut}>{languageStrings[5]}</div>
 					</div>
 				);
 				setLogin(true);
 			} else {
 				setIsLoggedIn(
 					<div>
-						<Link href={"/login"}>Logga in</Link>
+						<Link href={"/login"}>{languageStrings[4]}</Link>
 					</div>
 				);
 				setLogin(false);
@@ -56,14 +93,14 @@ export default function Navbar() {
 		<nav className={styles.nav}>
 			<ul>
 				<li>
-					<Link href="/">Framsidan</Link>
+					<Link href="/">{languageStrings[0]}</Link>
 				</li>
 				<li>
-					<Link href="/products">Produkter</Link>
+					<Link href="/products">{languageStrings[1]}</Link>
 				</li>
 				<li>
 					<Link href="/cart">
-						Kundkorg
+						{languageStrings[2]}
 						{cartAmount > 0 ? (
 							<div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-red-100">
 								{cartAmount}
@@ -72,11 +109,11 @@ export default function Navbar() {
 					</Link>
 				</li>
 				<li>
-					<Link href="/about">Om oss</Link>
+					<Link href="/about">{languageStrings[3]}</Link>
 				</li>
 				{login ? (
 					<li>
-						<Link href="/history">Historik</Link>
+						<Link href="/history">{languageStrings[6]}</Link>
 					</li>
 				) : null}
 				<li>{isLoggedIn}</li>

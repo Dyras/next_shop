@@ -14,7 +14,6 @@ import Link from "next/link";
 import { IProduct } from "@/lib/iproduct";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import type { NextRequest, NextResponse } from "next/server";
 
 const { client } = require("../lib/contentful");
 
@@ -23,7 +22,13 @@ export default function Products() {
 	const [filter, setFilter] = useState("");
 	const router = useRouter();
 	const [title, setTitle] = useState("");
-	const [languageStrings, setLanguageStrings] = useState<any>({});
+	const [languageStrings, setLanguageStrings] = useState<any>([
+		null,
+		null,
+		null,
+		null,
+		null,
+	]);
 
 	// Set "filter" to the query parameter
 	// If no query parameter, set "filter" to "all"
@@ -41,17 +46,24 @@ export default function Products() {
 
 		async function checkLanguage() {
 			const locale = window.navigator.language;
-			let language;
 			if (locale.startsWith("sv")) {
 				// Get entry 645bikC48FQqmGFdc9Iejv
-				language = await client.getEntry("645bikC48FQqmGFdc9Iejv", {
-					locale: "sv",
-				});
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "sv",
+					})
+					.then((data: { fields: { productsPage: string } }) => {
+						setLanguageStrings(data?.fields?.productsPage);
+					});
 			} else {
-				language = client.getEntry("645bikC48FQqmGFdc9Iejv", { locale: "sv" });
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "en",
+					})
+					.then((data: { fields: { productsPage: string } }) => {
+						setLanguageStrings(data?.fields?.productsPage);
+					});
 			}
-			console.log(language);
-			setLanguageStrings(language?.items[0]?.fields?.filters);
 		}
 		checkLanguage();
 	}, []);
@@ -86,9 +98,6 @@ export default function Products() {
 		}
 	}
 
-	// Check user locale
-
-	console.log(languageStrings);
 	return (
 		<>
 			<Head>
