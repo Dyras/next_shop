@@ -1,10 +1,11 @@
-import { db } from "@/components/firebase";
-import { useCartStore } from "@/lib/cartzustand";
-import { getAuth } from "firebase/auth";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
+import Head from "next/head";
+import { db } from "@/components/firebase";
+import { getAuth } from "firebase/auth";
+import { useCartStore } from "@/lib/cartzustand";
+import { useRouter } from "next/router";
 
 export default function Payment() {
 	const [validPurchase, setValidPurchase] = useState(false);

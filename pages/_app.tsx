@@ -1,11 +1,13 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { useEffect } from "react";
-import Navbar from "@/components/navbar/navbar";
-import { useCartStore } from "@/lib/cartzustand";
-import { getAuth } from "firebase/auth";
+
 import { doc, getDoc, setDoc } from "firebase/firestore";
+
+import type { AppProps } from "next/app";
+import Navbar from "@/components/navbar/navbar";
 import { db } from "@/components/firebase";
+import { getAuth } from "firebase/auth";
+import { useCartStore } from "@/lib/cartzustand";
+import { useEffect } from "react";
 
 function App({ Component, pageProps }: AppProps) {
 	const { cartStore, setCartStore } = useCartStore();

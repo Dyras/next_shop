@@ -1,10 +1,12 @@
-import { db } from "@/components/firebase";
-import { IProductSaved } from "@/lib/iproduct";
-import { getAuth } from "firebase/auth";
+import "firebase/firestore";
+
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import "firebase/firestore";
+
 import Head from "next/head";
+import { IProductSaved } from "@/lib/iproduct";
+import { db } from "@/components/firebase";
+import { getAuth } from "firebase/auth";
 
 export default function History() {
 	interface History {

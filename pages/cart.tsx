@@ -1,9 +1,10 @@
-import { useCartStore } from "@/lib/cartzustand";
-import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
+
 import Head from "next/head";
 import Image from "next/image";
+import { getAuth } from "firebase/auth";
+import { useCartStore } from "@/lib/cartzustand";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export default function Cart() {
 	const { cartStore } = useCartStore();

@@ -1,11 +1,12 @@
-import { db } from "@/components/firebase";
 import { IProduct, IProductSaved } from "@/lib/iproduct";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
+import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
-import { useCartStore } from "@/lib/cartzustand";
 import { useCartCounter } from "@/lib/cartcounter";
+import { useCartStore } from "@/lib/cartzustand";
+import { useRouter } from "next/router";
 
 export default function SingleProduct() {
 	const router = useRouter();

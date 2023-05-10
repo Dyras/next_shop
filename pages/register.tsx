@@ -1,10 +1,11 @@
-import { db } from "@/components/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { IProductSaved } from "@/lib/iproduct";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
 import Head from "next/head";
+import { IProductSaved } from "@/lib/iproduct";
+import { db } from "@/components/firebase";
+import { useRouter } from "next/router";
 
 export default function Register() {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -87,6 +88,7 @@ function registerAccount() {
 						email: user.email,
 						cart: defaultCart,
 						firstSeen: new Date(),
+						admin: false,
 					});
 					setDoc(doc(db, "Purchase_History", user.uid), {
 						history: [],

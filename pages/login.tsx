@@ -1,9 +1,10 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { validateEmail, validatePassword } from "./register";
 import { useEffect, useState } from "react";
+import { validateEmail, validatePassword } from "./register";
+
+import Head from "next/head";
 import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
-import Head from "next/head";
 
 export default function Login() {
 	const { login, setLogin } = useLogin();

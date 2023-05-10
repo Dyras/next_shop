@@ -1,19 +1,20 @@
-import { db } from "@/components/firebase";
 import {
-	collection,
 	DocumentData,
+	Query,
+	collection,
 	getDocs,
 	query,
-	Query,
 	where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import styles from "@/styles/products.module.css";
-import Link from "next/link";
-import { IProduct } from "@/lib/iproduct";
-import { useRouter } from "next/router";
+
 import Head from "next/head";
+import { IProduct } from "@/lib/iproduct";
+import Image from "next/image";
+import Link from "next/link";
+import { db } from "@/components/firebase";
+import styles from "@/styles/products.module.css";
+import { useRouter } from "next/router";
 
 const { client } = require("../lib/contentful");
 

@@ -1,12 +1,13 @@
-import Link from "next/link";
-import styles from "../../styles/Navbar.module.css";
 import { useEffect, useState } from "react";
+
+import Link from "next/link";
 import { getAuth } from "firebase/auth";
+import styles from "../../styles/Navbar.module.css";
 import { useCartAmount } from "@/lib/cartzustandamount";
+import { useCartCounter } from "@/lib/cartcounter";
 import { useCartStore } from "@/lib/cartzustand";
 import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
-import { useCartCounter } from "@/lib/cartcounter";
 
 const { client } = require("../../lib/contentful");
 

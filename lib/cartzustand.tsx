@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import { IProductSaved } from "./iproduct";
+import { create } from "zustand";
 
 interface ICartStore {
 	cartStore: IProductSaved[];
