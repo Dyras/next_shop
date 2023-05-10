@@ -1,20 +1,23 @@
 export interface IProduct {
-    id: string;
-    name: string;
-    manufacturer?: string;
-    description?: string;
-    articleType: string;
-    country?: string;
-    price: number;
-    rating?: number;
-    imageUrl?: string;
-    outOfStock: boolean;
-    slug: string;
-    publishedAt?: Date;
-    packaging: string;
-    vintage?: number;
-  }
+	id: string;
+	slug: string;
 
-  export interface IProductSaved extends IProduct {
-    amount: number;
-  }
+	name: string;
+	price: number;
+	outOfStock: boolean;
+	packaging: string;
+	articleType: string;
+	alcoholPercentage?: number;
+
+	manufacturer?: string;
+	description?: string;
+	country?: string;
+	rating?: number;
+	imageUrl?: string;
+	publishedAt?: Date;
+	vintage?: number;
+}
+
+export interface IProductSaved extends IProduct {
+	amount: number;
+}
