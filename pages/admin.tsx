@@ -1,6 +1,10 @@
+import { doc, getDoc } from "firebase/firestore";
+
 import Head from "next/head";
 import { IProduct } from "@/lib/iproduct";
+import { db } from "@/components/firebase";
 import { useState } from "react";
+
 const { client } = require("../lib/contentful");
 
 export default function Admin() {
@@ -30,7 +34,7 @@ export default function Admin() {
 							></input>
 							<br></br>
 							<input
-								className=" mb-1 border"
+								className="mb-1 border"
 								id="price"
 								placeholder="Pris"
 							></input>
@@ -115,23 +119,22 @@ export default function Admin() {
 					<title>Johans vinshop - Admin</title>
 				</Head>
 				<div>
-					Din produkt har skapas. Du flyttas snart till nya produktsidan!
+					Din produkt har skapats. Du flyttas snart till nya produktsidan!
 				</div>
 			</>
 		);
 	function addProduct() {
+		// Segment for getting the user input
+
 		const articleName = (
 			document.getElementById("articleName") as HTMLInputElement
 		).value;
-
 		const category = (document.getElementById("category") as HTMLInputElement)
 			.value;
-
 		const imageUrl = (document.getElementById("imageUrl") as HTMLInputElement)
 			.value;
 		const price = (document.getElementById("price") as HTMLInputElement)
 			.value as unknown as number;
-
 		const description = (
 			document.getElementById("description") as HTMLInputElement
 		).value;
@@ -148,7 +151,7 @@ export default function Admin() {
 		const packaging = (document.getElementById("packaging") as HTMLInputElement)
 			.value;
 
-		const random = Math.random().toString(36).substring(2, 31);
+		// Generate a random string for the product id and slug
 
 		const testObject = {
 			name: stringVerification(articleName),
@@ -161,6 +164,7 @@ export default function Admin() {
 			testObject.price === true &&
 			testObject.packaging === true
 		) {
+			const random = randomCreator() as unknown as string;
 			console.log("Nu skickas produkten till databasen");
 			const product: IProduct = {
 				id: random,
@@ -213,5 +217,20 @@ export default function Admin() {
 
 	function setProductPackaging(e: string) {
 		setPackaging(e);
+	}
+
+	async function randomCreator() {
+		while (true) {
+			const random = Math.random().toString(36).substring(2, 31);
+
+			await getDoc(doc(db, "products", random)).then((docSnap) => {
+				if (docSnap.exists()) {
+					console.log("Produktens ID finns redan");
+				} else {
+					console.log("Produktens ID är unikt");
+					return random;
+				}
+			});
+		}
 	}
 }
