@@ -123,7 +123,7 @@ export default function Admin() {
 				</div>
 			</>
 		);
-	function addProduct() {
+	async function addProduct() {
 		// Segment for getting the user input
 
 		const articleName = (
@@ -148,23 +148,37 @@ export default function Admin() {
 		).value as unknown as number;
 		const vintage = (document.getElementById("vintage") as HTMLInputElement)
 			.value as unknown as number;
-		const packaging = (document.getElementById("packaging") as HTMLInputElement)
-			.value;
+		const packagingType = packaging;
 
 		// Generate a random string for the product id and slug
 
 		const testObject = {
 			name: stringVerification(articleName),
 			price: numberVerification(price),
-			packaging: stringVerification(packaging),
+			packagingType: stringVerification(packagingType),
 		};
 
 		if (
 			testObject.name === true &&
 			testObject.price === true &&
-			testObject.packaging === true
+			testObject.packagingType === true
 		) {
-			const random = randomCreator() as unknown as string;
+			let endWhile = true;
+			let random = "";
+			while (endWhile) {
+				random = Math.random().toString(36).substring(2, 31);
+
+				await getDoc(doc(db, "products", random)).then((docSnap) => {
+					if (docSnap.exists()) {
+						console.log("Produktens ID finns redan");
+					} else {
+						console.log("Produktens ID är unikt");
+						endWhile = false;
+					}
+				});
+			}
+
+			console.log("Random", random);
 			console.log("Nu skickas produkten till databasen");
 			const product: IProduct = {
 				id: random,
@@ -179,7 +193,7 @@ export default function Admin() {
 				imageUrl: imageUrl,
 				outOfStock: false,
 				slug: random,
-				packaging: packaging,
+				packaging: packagingType,
 				vintage: Number(vintage),
 			};
 
@@ -217,20 +231,5 @@ export default function Admin() {
 
 	function setProductPackaging(e: string) {
 		setPackaging(e);
-	}
-
-	async function randomCreator() {
-		while (true) {
-			const random = Math.random().toString(36).substring(2, 31);
-
-			await getDoc(doc(db, "products", random)).then((docSnap) => {
-				if (docSnap.exists()) {
-					console.log("Produktens ID finns redan");
-				} else {
-					console.log("Produktens ID är unikt");
-					return random;
-				}
-			});
-		}
 	}
 }
