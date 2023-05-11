@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/components/firebase";
 import styles from "@/styles/products.module.css";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
 const { client } = require("../lib/contentful");
@@ -23,6 +24,7 @@ export default function Products() {
 	const [filter, setFilter] = useState("");
 	const router = useRouter();
 	const [title, setTitle] = useState("");
+	const { contentfulStore } = useContentfulStore();
 	const [languageStrings, setLanguageStrings] = useState<any>([
 		null,
 		null,
@@ -110,31 +112,31 @@ export default function Products() {
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("all")}
 					>
-						{languageStrings[0]}
+						{contentfulStore.productsPage[0]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rott")}
 					>
-						{languageStrings[1]}
+						{contentfulStore.productsPage[1]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("vitt")}
 					>
-						{languageStrings[2]}
+						{contentfulStore.productsPage[2]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rose")}
 					>
-						{languageStrings[3]}
+						{contentfulStore.productsPage[3]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("mousserande")}
 					>
-						{languageStrings[4]}
+						{contentfulStore.productsPage[4]}
 					</button>
 				</div>
 			</div>
