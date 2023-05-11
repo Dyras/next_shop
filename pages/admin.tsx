@@ -5,6 +5,7 @@ import Head from "next/head";
 import { IProduct } from "@/lib/iproduct";
 import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
+import router from "next/router";
 
 const { client } = require("../lib/contentful");
 export default function Admin() {
@@ -142,7 +143,8 @@ export default function Admin() {
 					</div>
 				</>
 			);
-	} else if (!admin) {
+	} else if (admin == false) {
+		router.push("/");
 		return (
 			<>
 				<Head>
