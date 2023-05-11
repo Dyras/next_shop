@@ -1,6 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
+import { ContentfulFields } from "@/lib/contentfulzustand";
 import Link from "next/link";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
@@ -8,6 +9,7 @@ import styles from "../../styles/Navbar.module.css";
 import { useCartAmount } from "@/lib/cartzustandamount";
 import { useCartCounter } from "@/lib/cartcounter";
 import { useCartStore } from "@/lib/cartzustand";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
 
@@ -15,6 +17,7 @@ const { client } = require("../../lib/contentful");
 
 export default function Navbar() {
 	const { cartAmount, setCartAmount } = useCartAmount();
+	const { contentfulStore, setContentfulStore } = useContentfulStore();
 	const { cartStore } = useCartStore();
 	const { login, setLogin } = useLogin();
 	const { count } = useCartCounter();
@@ -33,17 +36,48 @@ export default function Navbar() {
 	]);
 
 	useEffect(() => {
-		// Check user locale
-
 		async function checkLanguage() {
 			const locale = window.navigator.language;
 			if (locale.startsWith("sv")) {
-				// Get entry 645bikC48FQqmGFdc9Iejv
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "sv",
+					})
+					.then((data: { fields: ContentfulFields }) => {
+						setContentfulStore(data.fields);
+						console.log("Data:", data);
+						console.log("Contentful store:", contentfulStore);
+					});
+			} else {
+				await client
+					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
+						locale: "en",
+					})
+					.then((data: { fields: ContentfulFields }) => {
+						setContentfulStore(data.fields);
+						console.log("Data:", data);
+						console.log("Data fields:", data.fields);
+
+						console.log("Contentful store:", contentfulStore);
+					});
+			}
+		}
+		checkLanguage();
+	}, []);
+
+	useEffect(() => {
+		// Check user locale
+
+		async function checkLanguage() {
+			console.log("checkLanguage");
+			const locale = window.navigator.language;
+			if (locale.startsWith("sv")) {
 				await client
 					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
 						locale: "sv",
 					})
 					.then((data: { fields: { navbar: string } }) => {
+						console.log(data);
 						setLanguageStrings(data?.fields?.navbar);
 					});
 			} else {
@@ -66,13 +100,10 @@ export default function Navbar() {
 				{
 					const docRef = doc(db, "admins", user?.uid);
 					const docSnap = await getDoc(docRef);
-					console.log(docSnap);
 					if (docSnap.exists()) {
 						setAdmin(<div>Admin</div>);
-						console.log("admin");
 					} else {
 						setAdmin(null);
-						console.log("not admin");
 					}
 				}
 			} else {
@@ -116,7 +147,7 @@ export default function Navbar() {
 		<nav className={styles.nav}>
 			<ul>
 				<li>
-					<Link href="/">{languageStrings[0]}</Link>
+					<Link href="/">{contentfulStore.navbar[0]}</Link>
 				</li>
 				<li>
 					<Link href="/products">{languageStrings[1]}</Link>
