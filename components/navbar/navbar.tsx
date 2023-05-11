@@ -63,35 +63,7 @@ export default function Navbar() {
 			}
 		}
 		checkLanguage();
-	}, []);
-
-	useEffect(() => {
-		// Check user locale
-
-		async function checkLanguage() {
-			console.log("checkLanguage");
-			const locale = window.navigator.language;
-			if (locale.startsWith("sv")) {
-				await client
-					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
-						locale: "sv",
-					})
-					.then((data: { fields: { navbar: string } }) => {
-						console.log(data);
-						setLanguageStrings(data?.fields?.navbar);
-					});
-			} else {
-				await client
-					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
-						locale: "en",
-					})
-					.then((data: { fields: { navbar: string } }) => {
-						setLanguageStrings(data?.fields?.navbar);
-					});
-			}
-		}
-		checkLanguage();
-	}, []);
+	}, [window.navigator.language]);
 
 	useEffect(() => {
 		const auth = getAuth();
