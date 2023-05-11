@@ -1,12 +1,12 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 import Head from "next/head";
 import { IProduct } from "@/lib/iproduct";
 import { db } from "@/components/firebase";
-import { useState } from "react";
+import { getAuth } from "firebase/auth";
 
 const { client } = require("../lib/contentful");
-
 export default function Admin() {
 	const packagingList = {
 		1: "Flaska",
@@ -18,109 +18,148 @@ export default function Admin() {
 	};
 	const [productCreated, setProductCreated] = useState(false);
 	const [packaging, setPackaging] = useState("");
-	if (!productCreated)
-		return (
-			<>
-				<Head>
-					<title>Johans vinshop - Admin</title>
-				</Head>
-				<div>
-					<div className="mt-12 flex justify-center">
-						<form>
-							<input
-								className="mb-1 border"
-								id="articleName"
-								placeholder="Artikelnamn"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="price"
-								placeholder="Pris"
-							></input>
-							<br></br>
-							<select
-								className="select"
-								value={packaging}
-								onChange={(e) => setProductPackaging(e.target.value)}
-							>
-								<option value="">Välj förpackning</option>
-								{Object.values(packagingList).map((value: string) => (
-									<option key={value} value={value}>
-										{value}
-									</option>
-								))}
-							</select>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="category"
-								placeholder="Kategori"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="releaseDate"
-								placeholder="Släppdatum"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="manufacturer"
-								placeholder="Tillverkare"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="alcoholPercentage"
-								placeholder="Alkoholhalt"
-							></input>
-							<br></br>
-						</form>
+	const [admin, setAdmin] = useState<boolean | null>(null);
 
-						<form>
-							<input
-								className="mb-1 border"
-								id="imageUrl"
-								placeholder="Bildlänk"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="description"
-								placeholder="Beskrivning"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="country"
-								placeholder="Land"
-							></input>
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="vintage"
-								placeholder="Årgång"
-							></input>
-						</form>
+	useEffect(() => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const checkAdmin = async () => {
+			if (user !== null) {
+				const docRef = doc(db, "admins", user?.uid);
+				const docSnap = await getDoc(docRef);
+				console.log(docSnap);
+				if (docSnap.exists()) {
+					setAdmin(true);
+				} else {
+					setAdmin(false);
+				}
+			}
+		};
+		checkAdmin();
+	});
+
+	if (admin) {
+		if (!productCreated)
+			return (
+				<>
+					<Head>
+						<title>Johans vinshop - Admin</title>
+					</Head>
+					<div>
+						<div className="mt-12 flex justify-center">
+							<form>
+								<input
+									className="mb-1 border"
+									id="articleName"
+									placeholder="Artikelnamn"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="price"
+									placeholder="Pris"
+								></input>
+								<br></br>
+								<select
+									className="select"
+									value={packaging}
+									onChange={(e) => setProductPackaging(e.target.value)}
+								>
+									<option value="">Välj förpackning</option>
+									{Object.values(packagingList).map((value: string) => (
+										<option key={value} value={value}>
+											{value}
+										</option>
+									))}
+								</select>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="category"
+									placeholder="Kategori"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="releaseDate"
+									placeholder="Släppdatum"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="manufacturer"
+									placeholder="Tillverkare"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="alcoholPercentage"
+									placeholder="Alkoholhalt"
+								></input>
+								<br></br>
+							</form>
+
+							<form>
+								<input
+									className="mb-1 border"
+									id="imageUrl"
+									placeholder="Bildlänk"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="description"
+									placeholder="Beskrivning"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="country"
+									placeholder="Land"
+								></input>
+								<br></br>
+								<input
+									className="mb-1 border"
+									id="vintage"
+									placeholder="Årgång"
+								></input>
+							</form>
+						</div>
+						<div className="flex justify-center">
+							<button onClick={addProduct}>Lägg till produkt</button>
+						</div>
 					</div>
-					<div className="flex justify-center">
-						<button onClick={addProduct}>Lägg till produkt</button>
+				</>
+			);
+		else
+			return (
+				<>
+					<Head>
+						<title>Johans vinshop - Admin</title>
+					</Head>
+					<div>
+						Din produkt har skapats. Du flyttas snart till nya produktsidan!
 					</div>
-				</div>
-			</>
-		);
-	else
+				</>
+			);
+	} else if (!admin) {
 		return (
 			<>
 				<Head>
 					<title>Johans vinshop - Admin</title>
 				</Head>
-				<div>
-					Din produkt har skapats. Du flyttas snart till nya produktsidan!
-				</div>
 			</>
 		);
+	} else {
+		return (
+			<>
+				<Head>
+					<title>Johans vinshop - Admin</title>
+				</Head>
+			</>
+		);
+	}
+
 	async function addProduct() {
 		// Segment for getting the user input
 
