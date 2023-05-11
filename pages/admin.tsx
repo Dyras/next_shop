@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import Head from "next/head";
 import { IProduct } from "@/lib/iproduct";
@@ -38,14 +38,6 @@ export default function Admin() {
 								id="price"
 								placeholder="Pris"
 							></input>
-
-							<br></br>
-							<input
-								className="mb-1 border"
-								id="category"
-								placeholder="Kategori"
-							></input>
-
 							<br></br>
 							<select
 								className="select"
@@ -59,6 +51,12 @@ export default function Admin() {
 									</option>
 								))}
 							</select>
+							<br></br>
+							<input
+								className="mb-1 border"
+								id="category"
+								placeholder="Kategori"
+							></input>
 							<br></br>
 							<input
 								className="mb-1 border"
@@ -131,7 +129,7 @@ export default function Admin() {
 		).value;
 		const category = (document.getElementById("category") as HTMLInputElement)
 			.value;
-		const imageUrl = (document.getElementById("imageUrl") as HTMLInputElement)
+		let imageUrl = (document.getElementById("imageUrl") as HTMLInputElement)
 			.value;
 		const price = (document.getElementById("price") as HTMLInputElement)
 			.value as unknown as number;
@@ -170,7 +168,7 @@ export default function Admin() {
 
 				await getDoc(doc(db, "products", random)).then((docSnap) => {
 					if (docSnap.exists()) {
-						console.log("Produktens ID finns redan");
+						console.log("Produktens ID finns redan. Skapar nytt ID.");
 					} else {
 						console.log("Produktens ID är unikt");
 						endWhile = false;
@@ -180,6 +178,9 @@ export default function Admin() {
 
 			console.log("Random", random);
 			console.log("Nu skickas produkten till databasen");
+			if (imageUrl === "") {
+				imageUrl = "https://pic8.co/sh/3SwSx0.png";
+			}
 			const product: IProduct = {
 				id: random,
 				name: articleName,
@@ -192,12 +193,13 @@ export default function Admin() {
 				alcoholPercentage: alcoholPercentage,
 				imageUrl: imageUrl,
 				outOfStock: false,
-				slug: random,
+				slug: slugGenerator(articleName),
 				packaging: packagingType,
 				vintage: Number(vintage),
 			};
 
 			console.log("Det som skickas", product);
+			setDoc(doc(db, "products", random), product);
 			setProductCreated(true);
 		} else {
 			console.log("Något gick fel");
@@ -231,5 +233,28 @@ export default function Admin() {
 
 	function setProductPackaging(e: string) {
 		setPackaging(e);
+	}
+
+	function slugGenerator(string: string) {
+		string = string
+			.toLowerCase()
+			.replaceAll("å", "a")
+			.replaceAll("ä", "a")
+			.replaceAll("ö", "o")
+			.replaceAll(" ", "-")
+			.replaceAll(",", "")
+			.replaceAll("é", "e")
+			.replaceAll("á", "a")
+			.replaceAll("à", "a")
+			.replaceAll("'", "")
+			.replaceAll(":", "")
+			.replaceAll("!", "")
+			.replaceAll("&", "")
+			.replaceAll('"', "")
+			.replaceAll("(", "")
+			.replaceAll(")", "")
+			.replaceAll("?", "");
+
+		return string;
 	}
 }
