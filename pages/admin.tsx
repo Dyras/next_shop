@@ -160,6 +160,7 @@ export default function Admin() {
 		);
 	}
 
+	// Function for adding a product to the database
 	async function addProduct() {
 		// Segment for getting the user input
 
@@ -246,6 +247,7 @@ export default function Admin() {
 		}
 	}
 
+	// Verify that it's a valid string
 	function stringVerification(text: string | null) {
 		if (text === null) {
 			return false;
@@ -258,6 +260,7 @@ export default function Admin() {
 		}
 	}
 
+	// Verifies that the number is a valid number
 	function numberVerification(number: number | null) {
 		if (number === null) {
 			return false;
@@ -270,10 +273,12 @@ export default function Admin() {
 		}
 	}
 
+	// Sets the packaging type
 	function setProductPackaging(e: string) {
 		setPackaging(e);
 	}
 
+	// Cleans up the slug before returning it
 	function slugGenerator(string: string) {
 		string = string
 			.toLowerCase()
