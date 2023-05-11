@@ -1,6 +1,8 @@
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import Link from "next/link";
+import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import styles from "../../styles/Navbar.module.css";
 import { useCartAmount } from "@/lib/cartzustandamount";
@@ -16,6 +18,8 @@ export default function Navbar() {
 	const { cartStore } = useCartStore();
 	const { login, setLogin } = useLogin();
 	const { count } = useCartCounter();
+	const [admin, setAdmin] =
+		useState<React.ReactElement<HTMLDivElement> | null>();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const router = useRouter();
@@ -56,6 +60,28 @@ export default function Navbar() {
 	}, []);
 
 	useEffect(() => {
+		const auth = getAuth();
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				{
+					const docRef = doc(db, "admins", user?.uid);
+					const docSnap = await getDoc(docRef);
+					console.log(docSnap);
+					if (docSnap.exists()) {
+						setAdmin(<div>Admin</div>);
+						console.log("admin");
+					} else {
+						setAdmin(null);
+						console.log("not admin");
+					}
+				}
+			} else {
+				setAdmin(null);
+			}
+		});
+	}, []);
+
+	useEffect(() => {
 		let totalLength = 0;
 		for (let i = 0; i < cartStore.length; i++) {
 			totalLength += cartStore[i].amount;
@@ -67,11 +93,7 @@ export default function Navbar() {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
-				setIsLoggedIn(
-					<div>
-						<div onClick={useLogOut}>{languageStrings[5]}</div>
-					</div>
-				);
+				setIsLoggedIn(<div onClick={useLogOut}>{languageStrings[5]}</div>);
 				setLogin(true);
 			} else {
 				setIsLoggedIn(
@@ -86,7 +108,7 @@ export default function Navbar() {
 			auth.signOut();
 			router.push("/");
 		}
-	}, [router, setLogin]);
+	}, [router, setLogin, languageStrings]);
 
 	// Check if user is logged in
 
@@ -115,6 +137,11 @@ export default function Navbar() {
 				{login ? (
 					<li>
 						<Link href="/history">{languageStrings[6]}</Link>
+					</li>
+				) : null}
+				{admin ? (
+					<li>
+						<Link href="/admin">{admin}</Link>
 					</li>
 				) : null}
 				<li>{isLoggedIn}</li>
