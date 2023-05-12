@@ -105,7 +105,7 @@ export default function Navbar() {
 			auth.signOut();
 			router.push("/");
 		}
-	}, [router, setLogin]);
+	}, [contentfulStore?.navbar, router, setLogin]);
 
 	// Check if user is logged in
 
