@@ -17,21 +17,12 @@ import styles from "@/styles/products.module.css";
 import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
-const { client } = require("../lib/contentful");
-
 export default function Products() {
 	const [products, setProducts] = useState<IProduct[]>([]);
 	const [filter, setFilter] = useState("");
 	const router = useRouter();
 	const [title, setTitle] = useState("");
 	const { contentfulStore } = useContentfulStore();
-	const [languageStrings, setLanguageStrings] = useState<any>([
-		null,
-		null,
-		null,
-		null,
-		null,
-	]);
 
 	// Set "filter" to the query parameter
 	// If no query parameter, set "filter" to "all"
@@ -43,33 +34,6 @@ export default function Products() {
 			setFilter("all");
 		}
 	}, [router.query.filter]);
-
-	useEffect(() => {
-		// Check user locale
-
-		async function checkLanguage() {
-			const locale = window.navigator.language;
-			if (locale.startsWith("sv")) {
-				// Get entry 645bikC48FQqmGFdc9Iejv
-				await client
-					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
-						locale: "sv",
-					})
-					.then((data: { fields: { productsPage: string } }) => {
-						setLanguageStrings(data?.fields?.productsPage);
-					});
-			} else {
-				await client
-					.getEntry("40tbz5JrFGf79QTZjsxvbF", {
-						locale: "en",
-					})
-					.then((data: { fields: { productsPage: string } }) => {
-						setLanguageStrings(data?.fields?.productsPage);
-					});
-			}
-		}
-		checkLanguage();
-	}, []);
 
 	// Check if the filter has been updated
 	// Then fetch from Firestore
