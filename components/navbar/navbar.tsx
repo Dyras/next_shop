@@ -63,7 +63,7 @@ export default function Navbar() {
 			}
 		}
 		checkLanguage();
-	}, [window.navigator.language]);
+	}, []);
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -119,14 +119,14 @@ export default function Navbar() {
 		<nav className={styles.nav}>
 			<ul>
 				<li>
-					<Link href="/">{contentfulStore.navbar[0]}</Link>
+					<Link href="/">{contentfulStore?.navbar[0]}</Link>
 				</li>
 				<li>
-					<Link href="/products">{contentfulStore.navbar[1]}</Link>
+					<Link href="/products">{contentfulStore?.navbar[1]}</Link>
 				</li>
 				<li>
 					<Link href="/cart">
-						{contentfulStore.navbar[2]}
+						{contentfulStore?.navbar[2]}
 						{cartAmount > 0 ? (
 							<div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-red-100">
 								{cartAmount}
@@ -135,11 +135,11 @@ export default function Navbar() {
 					</Link>
 				</li>
 				<li>
-					<Link href="/about">{contentfulStore.navbar[3]}</Link>
+					<Link href="/about">{contentfulStore?.navbar[3]}</Link>
 				</li>
 				{login ? (
 					<li>
-						<Link href="/history">{contentfulStore.navbar[6]}</Link>
+						<Link href="/history">{contentfulStore?.navbar[6]}</Link>
 					</li>
 				) : null}
 				{admin ? (
