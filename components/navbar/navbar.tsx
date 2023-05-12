@@ -26,14 +26,6 @@ export default function Navbar() {
 
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const router = useRouter();
-	const [languageStrings, setLanguageStrings] = useState<any>([
-		null,
-		null,
-		null,
-		null,
-		null,
-		null,
-	]);
 
 	useEffect(() => {
 		async function checkLanguage() {
@@ -96,12 +88,14 @@ export default function Navbar() {
 		const auth = getAuth();
 		auth.onAuthStateChanged((user) => {
 			if (user) {
-				setIsLoggedIn(<div onClick={useLogOut}>{languageStrings[5]}</div>);
+				setIsLoggedIn(
+					<div onClick={useLogOut}>{contentfulStore?.navbar[5]}</div>
+				);
 				setLogin(true);
 			} else {
 				setIsLoggedIn(
 					<div>
-						<Link href={"/login"}>{languageStrings[4]}</Link>
+						<Link href={"/login"}>{contentfulStore?.navbar[4]}</Link>
 					</div>
 				);
 				setLogin(false);
@@ -111,7 +105,7 @@ export default function Navbar() {
 			auth.signOut();
 			router.push("/");
 		}
-	}, [router, setLogin, languageStrings]);
+	}, [router, setLogin]);
 
 	// Check if user is logged in
 
