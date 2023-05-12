@@ -53,7 +53,7 @@ export default function SingleProduct() {
 				setProduct(docSnap.data() as IProduct);
 			} else {
 				console.log("Document not found!");
-				setProduct(null);
+				router.push("/404");
 			}
 		};
 		getProduct();
