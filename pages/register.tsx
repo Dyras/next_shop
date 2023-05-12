@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import { IProductSaved } from "@/lib/iproduct";
 import { db } from "@/components/firebase";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
 export default function Register() {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const { contentfulStore } = useContentfulStore();
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -27,7 +29,6 @@ export default function Register() {
 				<Head>
 					<title>Johans vinshop - Registrering</title>
 				</Head>
-				<h1>Register</h1>
 				<form>
 					<input
 						type="email"
@@ -37,12 +38,12 @@ export default function Register() {
 					/>
 					<input
 						type="password"
-						placeholder="Lösenord"
+						placeholder={contentfulStore?.registerLoginPage[3]}
 						id="password"
 						required
 					/>
 					<button type="button" onClick={registerAccount}>
-						Registrera dig
+						{contentfulStore?.registerLoginPage[0]}
 					</button>
 				</form>
 			</div>
@@ -53,7 +54,7 @@ export default function Register() {
 				<Head>
 					<title>Johans vinshop - Registrering</title>
 				</Head>
-				<h1>Du är redan inloggad!</h1>
+				<h1>{contentfulStore?.registerLoginPage[1]}</h1>
 			</div>
 		);
 	}

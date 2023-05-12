@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { validateEmail, validatePassword } from "./register";
 
 import Head from "next/head";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useLogin } from "@/lib/cartzustandlogin";
 import { useRouter } from "next/router";
 
@@ -10,6 +11,7 @@ export default function Login() {
 	const { login, setLogin } = useLogin();
 	const [isLoggedIn, setIsLoggedIn] = useState(<div></div>);
 	const router = useRouter();
+	const { contentfulStore } = useContentfulStore();
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -20,7 +22,7 @@ export default function Login() {
 						<Head>
 							<title>Johans vinshop - Logga in</title>
 						</Head>
-						Du är redan inloggad!
+						{contentfulStore.registerLoginPage[1]}
 					</div>
 				);
 			} else {
@@ -29,7 +31,7 @@ export default function Login() {
 						<Head>
 							<title>Johans vinshop - Logga in</title>
 						</Head>
-						<h1>Logga in</h1>
+						<h1>{contentfulStore.registerLoginPage[2]}</h1>
 						<form>
 							<input
 								type="email"
@@ -39,12 +41,12 @@ export default function Login() {
 							/>
 							<input
 								type="password"
-								placeholder="Lösenord"
+								placeholder={contentfulStore.registerLoginPage[3]}
 								id="password"
 								required
 							/>
 							<button type="button" onClick={loginAccount}>
-								Logga in
+								{contentfulStore.registerLoginPage[2]}
 							</button>
 						</form>
 					</div>
