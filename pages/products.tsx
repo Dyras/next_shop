@@ -112,31 +112,31 @@ export default function Products() {
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("all")}
 					>
-						{contentfulStore.productsPage[0]}
+						{contentfulStore?.productsPage[0]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rott")}
 					>
-						{contentfulStore.productsPage[1]}
+						{contentfulStore?.productsPage[1]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("vitt")}
 					>
-						{contentfulStore.productsPage[2]}
+						{contentfulStore?.productsPage[2]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("rose")}
 					>
-						{contentfulStore.productsPage[3]}
+						{contentfulStore?.productsPage[3]}
 					</button>
 					<button
 						className="focus:shadow-outline m-2 h-8 rounded-lg bg-orange-500 px-4 text-sm text-indigo-100 transition-colors duration-150 hover:bg-indigo-800"
 						onClick={() => clickHandler("mousserande")}
 					>
-						{contentfulStore.productsPage[4]}
+						{contentfulStore?.productsPage[4]}
 					</button>
 				</div>
 			</div>
