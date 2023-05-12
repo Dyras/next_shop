@@ -5,17 +5,21 @@ import Head from "next/head";
 import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
 import { useCartStore } from "@/lib/cartzustand";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
 export default function Payment() {
-	const [validPurchase, setValidPurchase] = useState(false);
+	const [validPurchase, setValidPurchase] = useState<Boolean | null>(null);
 	const { cartStore, setCartStore } = useCartStore();
 	const [handledPurchase, setHandledPurchase] = useState(false);
 	const router = useRouter();
+	const { contentfulStore } = useContentfulStore();
 
 	useEffect(() => {
-		if (localStorage.getItem("validPurchase") !== "false") {
+		if (localStorage.getItem("validPurchase") == "true") {
 			setValidPurchase(true);
+		} else {
+			setValidPurchase(false);
 		}
 	}, []);
 
@@ -25,9 +29,9 @@ export default function Payment() {
 		return (
 			<div>
 				<Head>
-					<title>Johans vinshop - Betala</title>
+					<title>Johans vinshop - {contentfulStore?.paymentPage[0]}</title>
 				</Head>
-				<h1>Betala</h1>
+				<h1>{contentfulStore?.paymentPage[0]}</h1>
 				<form>
 					<input
 						type="text"
@@ -38,27 +42,27 @@ export default function Payment() {
 					<input type="text" placeholder="MM/ÅÅ" id="expirydate" required />
 					<input type="text" placeholder="CVC" id="cvc" required />
 					<button type="button" onClick={pay}>
-						Betala
+						{contentfulStore?.paymentPage[1]}
 					</button>
 				</form>
 			</div>
 		);
-	} else if (handledPurchase == true) {
-		return (
-			<div>
-				<h1>Din betalning gick igenom! Flyttar dig till bekräftelsesidan...</h1>
-			</div>
-		);
-	} else {
+	} else if (validPurchase == false) {
+		console.log("Else if");
 		setTimeout(() => {
 			router.push("/cart");
 		}, 2000);
 		return (
 			<div>
-				<h1>
-					Du har inte gjort någon beställning. Du flyttas nu till din
-					varukorg...
-				</h1>
+				<h1>{contentfulStore?.paymentPage[2]}</h1>
+			</div>
+		);
+	} else if (validPurchase == null) {
+		return <div></div>;
+	} else {
+		return (
+			<div>
+				<h1>{contentfulStore?.paymentPage[3]}</h1>
 			</div>
 		);
 	}
