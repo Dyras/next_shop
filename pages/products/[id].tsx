@@ -6,6 +6,7 @@ import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
 import { useCartCounter } from "@/lib/cartcounter";
 import { useCartStore } from "@/lib/cartzustand";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
 export default function SingleProduct() {
@@ -16,6 +17,7 @@ export default function SingleProduct() {
 
 	const { cartStore, setCartStore } = useCartStore();
 	const { count, increment } = useCartCounter();
+	const { contentfulStore } = useContentfulStore();
 
 	useEffect(() => {
 		if (amount > 1) {
@@ -133,11 +135,12 @@ export default function SingleProduct() {
 
 	return (
 		<div>
-			<div>Produkten hittades</div>
 			<div>{product.name}</div>
 			{amount != 0 ? (
 				<div>
-					<div>{amount} i kundkorgen</div>
+					<div>
+						{amount} {contentfulStore?.productPage[2]}
+					</div>
 					<select
 						className="select"
 						value={amount}
@@ -152,10 +155,12 @@ export default function SingleProduct() {
 						<option value="7">7</option>
 						<option value="8">8</option>
 					</select>
-					<button onClick={removeFromCart}>Ta bort</button>
+					<button onClick={removeFromCart}>
+						{contentfulStore?.productPage[1]}
+					</button>
 				</div>
 			) : (
-				<button onClick={addtoCart}>Köp</button>
+				<button onClick={addtoCart}>{contentfulStore?.productPage[0]}</button>
 			)}
 		</div>
 	);
