@@ -8,6 +8,7 @@ export interface ContentfulFields {
 	historyPage: string[];
 	aboutPage: string[];
 	privacyPage: string[];
+	paymentPage: string[];
 }
 
 interface IContentfulStore {
@@ -24,6 +25,7 @@ export const useContentfulStore = create<IContentfulStore>()((set) => ({
 		historyPage: [],
 		aboutPage: [],
 		privacyPage: [],
+		paymentPage: [],
 	},
 	setContentfulStore: (contentful: ContentfulFields) =>
 		set({ contentfulStore: contentful }),
