@@ -4,12 +4,15 @@ import Head from "next/head";
 import Image from "next/image";
 import { getAuth } from "firebase/auth";
 import { useCartStore } from "@/lib/cartzustand";
+import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
 
 export default function Cart() {
 	const { cartStore } = useCartStore();
 	const [loggedIn, setLoggedIn] = useState(false);
 	const router = useRouter();
+	const { contentfulStore } = useContentfulStore();
+
 	const auth = getAuth();
 	function initiatePurchase() {
 		localStorage.setItem("validPurchase", "true");
@@ -56,19 +59,19 @@ export default function Cart() {
 									<div className="font-bold">{product.name}</div>
 									<div className="truncate">
 										{product.articleType === "vitt"
-											? "Vitt vin"
+											? contentfulStore?.cartPage[2]
 											: product.articleType === "rott"
-											? "Rött vin"
+											? contentfulStore?.cartPage[3]
 											: product.articleType === "rose"
-											? "Rosévin"
+											? contentfulStore?.cartPage[4]
 											: product.articleType === "mousserande"
-											? "Bubbel"
+											? contentfulStore?.cartPage[5]
 											: product.articleType === "ol"
-											? "Öl"
+											? contentfulStore?.cartPage[6]
 											: product.articleType === "cider"
-											? "Cider"
+											? contentfulStore?.cartPage[7]
 											: product.articleType === "sprit"
-											? "Sprit"
+											? contentfulStore?.cartPage[8]
 											: product.articleType.charAt(0).toUpperCase() +
 											  product.articleType.slice(1)}
 									</div>
@@ -81,12 +84,16 @@ export default function Cart() {
 							</div>
 						))
 					) : (
-						<p>Kundkorgen är tom</p>
+						<p>{contentfulStore?.cartPage[0]}</p>
 					)}
 					{loggedIn && cartStore.length > 0 ? (
-						<button onClick={initiatePurchase}>Till betalning</button>
+						<button onClick={initiatePurchase}>
+							{contentfulStore?.cartPage[1]}
+						</button>
 					) : !loggedIn && cartStore.length > 0 ? (
-						<button onClick={loginWarning}>Till betalning</button>
+						<button onClick={loginWarning}>
+							{contentfulStore?.cartPage[1]}
+						</button>
 					) : null}
 				</div>
 			</div>
