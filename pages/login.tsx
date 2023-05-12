@@ -22,7 +22,7 @@ export default function Login() {
 						<Head>
 							<title>Johans vinshop - Logga in</title>
 						</Head>
-						{contentfulStore.registerLoginPage[1]}
+						{contentfulStore?.registerLoginPage[1]}
 					</div>
 				);
 			} else {
@@ -31,7 +31,7 @@ export default function Login() {
 						<Head>
 							<title>Johans vinshop - Logga in</title>
 						</Head>
-						<h1>{contentfulStore.registerLoginPage[2]}</h1>
+						<h1>{contentfulStore?.registerLoginPage[2]}</h1>
 						<form>
 							<input
 								type="email"
@@ -41,12 +41,12 @@ export default function Login() {
 							/>
 							<input
 								type="password"
-								placeholder={contentfulStore.registerLoginPage[3]}
+								placeholder={contentfulStore?.registerLoginPage[3]}
 								id="password"
 								required
 							/>
 							<button type="button" onClick={loginAccount}>
-								{contentfulStore.registerLoginPage[2]}
+								{contentfulStore?.registerLoginPage[2]}
 							</button>
 						</form>
 					</div>
