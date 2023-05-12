@@ -37,8 +37,6 @@ export default function Navbar() {
 					})
 					.then((data: { fields: ContentfulFields }) => {
 						setContentfulStore(data.fields);
-						console.log("Data:", data);
-						console.log("Contentful store:", contentfulStore);
 					});
 			} else {
 				await client
@@ -47,10 +45,6 @@ export default function Navbar() {
 					})
 					.then((data: { fields: ContentfulFields }) => {
 						setContentfulStore(data.fields);
-						console.log("Data:", data);
-						console.log("Data fields:", data.fields);
-
-						console.log("Contentful store:", contentfulStore);
 					});
 			}
 		}

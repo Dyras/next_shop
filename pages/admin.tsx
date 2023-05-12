@@ -240,11 +240,10 @@ export default function Admin() {
 				vintage: Number(vintage),
 			};
 
-			console.log("Det som skickas", product);
 			setDoc(doc(db, "products", random), product);
 			setProductCreated(true);
 		} else {
-			console.log("Något gick fel");
+			console.log("Something went wrong");
 			console.log(testObject);
 		}
 	}
