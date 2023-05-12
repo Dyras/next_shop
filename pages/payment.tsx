@@ -47,8 +47,7 @@ export default function Payment() {
 				</form>
 			</div>
 		);
-	} else if (validPurchase == false) {
-		console.log("Else if");
+	} else if (validPurchase == false && handledPurchase == false) {
 		setTimeout(() => {
 			router.push("/cart");
 		}, 2000);
@@ -59,12 +58,15 @@ export default function Payment() {
 		);
 	} else if (validPurchase == null) {
 		return <div></div>;
-	} else {
+	} else if (handledPurchase == true) {
 		return (
 			<div>
 				<h1>{contentfulStore?.paymentPage[3]}</h1>
 			</div>
 		);
+	} else {
+		console.log("Else");
+		return <div></div>;
 	}
 
 	async function pay() {
@@ -115,9 +117,8 @@ export default function Payment() {
 					});
 					setCartStore([]);
 				}
-				setTimeout(() => {
-					router.push("/history");
-				}, 200);
+				setHandledPurchase(true);
+				setTimeout(() => {}, 200);
 			}
 		} else {
 			console.log("You are not logged in!");
