@@ -135,7 +135,10 @@ export default function Navbar() {
 					</Link>
 				</li>
 				<li>
-					<Link href="/about">{contentfulStore?.navbar[3]}</Link>
+					<div>
+						<Link href="/about">{contentfulStore?.navbar[3]} | </Link>
+						<Link href="/privacy">{contentfulStore?.navbar[7]} </Link>
+					</div>
 				</li>
 				{login ? (
 					<li>
