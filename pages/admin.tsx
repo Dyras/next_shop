@@ -30,6 +30,7 @@ export default function Admin() {
 	const [productCreated, setProductCreated] = useState(false);
 	const [packaging, setPackaging] = useState("");
 	const [productType, setProductType] = useState("");
+	const [organic, setOrganic] = useState(false);
 	const [admin, setAdmin] = useState<boolean | null>(null);
 	const auth = getAuth();
 	const user = auth.currentUser;
@@ -141,6 +142,18 @@ export default function Admin() {
 									id="vintage"
 									placeholder="Årgång"
 								></input>
+								<br></br>
+								<div className="ml-1">
+									Ekologisk
+									<input
+										className="ml-1"
+										type="checkbox"
+										checked={organic}
+										onChange={(e) => {
+											setOrganic(e.target.checked);
+										}}
+									></input>
+								</div>
 							</form>
 						</div>
 						<div className="flex justify-center">
@@ -205,9 +218,6 @@ export default function Admin() {
 		const vintage = (document.getElementById("vintage") as HTMLInputElement)
 			.value as unknown as number;
 		const packagingType = packaging;
-		// Generate a random string for the product id and slug
-
-		console.log(slugGenerator(category || "alkoholdryck"));
 
 		const newPrice = Number(price.replace(",", ".").replace(":", "."));
 		const testObject = {

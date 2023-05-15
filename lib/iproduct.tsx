@@ -8,6 +8,7 @@ export interface IProduct {
 	packaging: string;
 	articleType: string;
 	articleTypeSlug?: string;
+	organic?: boolean;
 
 	alcoholPercentage?: number;
 	manufacturer?: string;
