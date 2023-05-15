@@ -39,7 +39,6 @@ export default function Admin() {
 			if (user !== null) {
 				const docRef = doc(db, "admins", user?.uid);
 				const docSnap = await getDoc(docRef);
-				console.log(docSnap);
 				if (docSnap.exists()) {
 					setAdmin(true);
 				} else {
