@@ -21,9 +21,9 @@ export default function Admin() {
 	const [packaging, setPackaging] = useState("");
 	const [admin, setAdmin] = useState<boolean | null>(null);
 
+	const auth = getAuth();
+	const user = auth.currentUser;
 	useEffect(() => {
-		const auth = getAuth();
-		const user = auth.currentUser;
 		const checkAdmin = async () => {
 			if (user !== null) {
 				const docRef = doc(db, "admins", user?.uid);
@@ -37,7 +37,7 @@ export default function Admin() {
 			}
 		};
 		checkAdmin();
-	});
+	}, [user]);
 
 	if (admin) {
 		if (!productCreated)
