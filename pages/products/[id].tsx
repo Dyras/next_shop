@@ -51,6 +51,10 @@ export default function SingleProduct() {
 			const docSnap = await getDoc(docRef);
 			if (docSnap.exists()) {
 				setProduct(docSnap.data() as IProduct);
+
+				if (product) {
+					document.title = product.name + " - Johans vinshop";
+				}
 			} else {
 				router.push("/404");
 			}
