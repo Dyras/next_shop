@@ -144,7 +144,7 @@ export default function Products() {
 		} else {
 			queryData = query(
 				collection(db, "products"),
-				where("articleType", "==", filter)
+				where("articleTypeSlug", "==", filter)
 			);
 		}
 
@@ -196,6 +196,9 @@ export default function Products() {
 				break;
 			case "mousserande":
 				title = "Mousserande viner";
+				break;
+			case "ol":
+				title = "Öler";
 				break;
 			default:
 				title = "Alla viner";

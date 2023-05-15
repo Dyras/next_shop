@@ -18,10 +18,10 @@ export default function Admin() {
 		6: "Plastburk",
 	};
 	const typeList = {
-		1: "Vitt",
-		2: "Rött",
-		3: "Rosé",
-		4: "Mousserande",
+		1: "Vitt vin",
+		2: "Rött vin",
+		3: "Rosévin",
+		4: "Mousserande vin",
 		5: "Söt cider",
 		6: "Torr cider",
 		7: "Öl",
@@ -324,6 +324,7 @@ export default function Admin() {
 	function slugGenerator(string: string) {
 		return (string = string
 			.toLowerCase()
+			.replaceAll("vin", "")
 			.replaceAll("å", "a")
 			.replaceAll("ä", "a")
 			.replaceAll("ö", "o")
