@@ -7,8 +7,9 @@ export interface IProduct {
 	outOfStock: boolean;
 	packaging: string;
 	articleType: string;
-	alcoholPercentage?: number;
+	articleTypeSlug?: string;
 
+	alcoholPercentage?: number;
 	manufacturer?: string;
 	description?: string;
 	country?: string;

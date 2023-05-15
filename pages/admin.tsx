@@ -17,9 +17,19 @@ export default function Admin() {
 		5: "Plastflaska",
 		6: "Plastburk",
 	};
-
+	const typeList = {
+		1: "Vitt",
+		2: "Rött",
+		3: "Rosé",
+		4: "Mousserande",
+		5: "Söt cider",
+		6: "Torr cider",
+		7: "Öl",
+		8: "Alkoholfritt",
+	};
 	const [productCreated, setProductCreated] = useState(false);
 	const [packaging, setPackaging] = useState("");
+	const [productType, setProductType] = useState("");
 	const [admin, setAdmin] = useState<boolean | null>(null);
 	const auth = getAuth();
 	const user = auth.currentUser;
@@ -65,7 +75,7 @@ export default function Admin() {
 								<select
 									className="select"
 									value={packaging}
-									onChange={(e) => setProductPackaging(e.target.value)}
+									onChange={(e) => setPackaging(e.target.value)}
 								>
 									<option value="">Välj förpackning</option>
 									{Object.values(packagingList).map((value: string) => (
@@ -75,11 +85,18 @@ export default function Admin() {
 									))}
 								</select>
 								<br></br>
-								<input
-									className="mb-1 border"
-									id="category"
-									placeholder="Kategori"
-								></input>
+								<select
+									className="select"
+									value={productType}
+									onChange={(e) => setProductType(e.target.value)}
+								>
+									<option value="">Välj produkttyp</option>
+									{Object.values(typeList).map((value: string) => (
+										<option key={value} value={value}>
+											{value}
+										</option>
+									))}
+								</select>
 								<br></br>
 								<input
 									className="mb-1 border"
@@ -170,8 +187,7 @@ export default function Admin() {
 		const articleName = (
 			document.getElementById("articleName") as HTMLInputElement
 		).value;
-		const category = (document.getElementById("category") as HTMLInputElement)
-			.value;
+		const category = productType;
 		let imageUrl = (document.getElementById("imageUrl") as HTMLInputElement)
 			.value;
 		const price = (document.getElementById("price") as HTMLInputElement)
@@ -190,8 +206,9 @@ export default function Admin() {
 		const vintage = (document.getElementById("vintage") as HTMLInputElement)
 			.value as unknown as number;
 		const packagingType = packaging;
-
 		// Generate a random string for the product id and slug
+
+		console.log(slugGenerator(category || "alkoholdryck"));
 
 		const newPrice = Number(price.replace(",", ".").replace(":", "."));
 		const testObject = {
@@ -230,6 +247,7 @@ export default function Admin() {
 				price: Number(newPrice),
 				description: description,
 				articleType: category,
+				articleTypeSlug: slugGenerator(category || "alkoholdryck"),
 				country: country,
 				publishedAt: new Date(),
 				manufacturer: manufacturer,
@@ -300,11 +318,6 @@ export default function Admin() {
 				return false;
 			}
 		}
-	}
-
-	// Sets the packaging type
-	function setProductPackaging(e: string) {
-		setPackaging(e);
 	}
 
 	// Cleans up the slug before returning it
