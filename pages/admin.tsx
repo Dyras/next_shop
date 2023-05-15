@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 
 import Head from "next/head";
 import { IProduct } from "@/lib/iproduct";
+import Stripe from "stripe";
 import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
 import router from "next/router";
 
-const { client } = require("../lib/contentful");
 export default function Admin() {
 	const packagingList = {
 		1: "Flaska",
@@ -17,12 +17,13 @@ export default function Admin() {
 		5: "Plastflaska",
 		6: "Plastburk",
 	};
+
 	const [productCreated, setProductCreated] = useState(false);
 	const [packaging, setPackaging] = useState("");
 	const [admin, setAdmin] = useState<boolean | null>(null);
-
 	const auth = getAuth();
 	const user = auth.currentUser;
+
 	useEffect(() => {
 		const checkAdmin = async () => {
 			if (user !== null) {
@@ -174,7 +175,7 @@ export default function Admin() {
 		let imageUrl = (document.getElementById("imageUrl") as HTMLInputElement)
 			.value;
 		const price = (document.getElementById("price") as HTMLInputElement)
-			.value as unknown as number;
+			.value as string;
 		const description = (
 			document.getElementById("description") as HTMLInputElement
 		).value;
@@ -192,9 +193,10 @@ export default function Admin() {
 
 		// Generate a random string for the product id and slug
 
+		const newPrice = Number(price.replace(",", ".").replace(":", "."));
 		const testObject = {
 			name: stringVerification(articleName),
-			price: numberVerification(price),
+			price: numberVerification(newPrice),
 			packagingType: stringVerification(packagingType),
 		};
 
@@ -218,15 +220,14 @@ export default function Admin() {
 				});
 			}
 
-			console.log("Random", random);
-			console.log("Nu skickas produkten till databasen");
 			if (imageUrl === "") {
 				imageUrl = "https://pic8.co/sh/3SwSx0.png";
 			}
+
 			const product: IProduct = {
 				id: random,
 				name: articleName,
-				price: Number(price),
+				price: Number(newPrice),
 				description: description,
 				articleType: category,
 				country: country,
@@ -241,11 +242,37 @@ export default function Admin() {
 			};
 
 			setDoc(doc(db, "products", random), product);
+			addToStripe(product);
 			setProductCreated(true);
 		} else {
 			console.log("Something went wrong");
 			console.log(testObject);
 		}
+	}
+
+	async function addToStripe(product: IProduct) {
+		const stripe = require("stripe")(
+			"sk_test_51Mng5vAtLJGeuFzBE3JC5DVVdD5pSHr8OstzQr9zt9Sy8ufIsBiHFsMnY3dj4T5lSxVq9y2GkC5I5Jeqr9kv5B2Q00jWH277Jb"
+		);
+
+		const productToSend = await stripe.products
+			.create({
+				name: product.name,
+				id: product.id,
+				images: [product.imageUrl],
+				default_price_data: {
+					unit_amount: product.price * 100,
+					currency: "sek",
+				},
+			})
+			.then((product: any) => {
+				console.log("Product created in Stripe", product);
+			})
+			.catch((error: any) => {
+				console.log("Error creating product in Stripe", error);
+			});
+
+		console.log("Product to send", productToSend);
 	}
 
 	// Verify that it's a valid string
@@ -266,7 +293,8 @@ export default function Admin() {
 		if (number === null) {
 			return false;
 		} else {
-			if (number > 0) {
+			// 3 is the minimum price for Stripe
+			if (number >= 3) {
 				return true;
 			} else {
 				return false;
@@ -281,7 +309,7 @@ export default function Admin() {
 
 	// Cleans up the slug before returning it
 	function slugGenerator(string: string) {
-		string = string
+		return (string = string
 			.toLowerCase()
 			.replaceAll("å", "a")
 			.replaceAll("ä", "a")
@@ -298,8 +326,6 @@ export default function Admin() {
 			.replaceAll('"', "")
 			.replaceAll("(", "")
 			.replaceAll(")", "")
-			.replaceAll("?", "");
-
-		return string;
+			.replaceAll("?", ""));
 	}
 }
