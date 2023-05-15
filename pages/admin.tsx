@@ -220,20 +220,20 @@ export default function Admin() {
 		const packagingType = packaging;
 
 		const newPrice = Number(price.replace(",", ".").replace(":", "."));
-		const testObject = {
+		const validProductObject = {
 			name: stringVerification(articleName),
 			price: numberVerification(newPrice),
 			packagingType: stringVerification(packagingType),
 		};
 
 		if (
-			testObject.name === true &&
-			testObject.price === true &&
-			testObject.packagingType === true
+			validProductObject.name === true &&
+			validProductObject.price === true &&
+			validProductObject.packagingType === true
 		) {
-			let endWhile = true;
+			let existingIdCheck = true;
 			let random = "";
-			while (endWhile) {
+			while (existingIdCheck) {
 				random = Math.random().toString(36).substring(2, 31);
 
 				await getDoc(doc(db, "products", random)).then((docSnap) => {
@@ -241,7 +241,7 @@ export default function Admin() {
 						console.log("Produktens ID finns redan. Skapar nytt ID.");
 					} else {
 						console.log("Produktens ID är unikt");
-						endWhile = false;
+						existingIdCheck = false;
 					}
 				});
 			}
@@ -273,7 +273,7 @@ export default function Admin() {
 			setProductCreated(true);
 		} else {
 			console.log("Something went wrong");
-			console.log(testObject);
+			console.log(validProductObject);
 		}
 	}
 
