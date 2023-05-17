@@ -39,29 +39,34 @@ export default function Cart() {
 	}
 
 	const handleClick = async (event) => {
-		let stripeCart = [];
+		let stripeCart: { price: string | undefined; quantity: number }[] = [];
 		cartStore.forEach((product) => {
 			stripeCart.push({
-				price: product.id,
+				price: product.priceId[0],
 				quantity: product.amount,
 			});
 		});
+		const auth = getAuth();
 
+		let userEmail = "";
+		if (auth.currentUser?.email != null) {
+			userEmail = auth.currentUser.email;
+		}
 		const stripe = await stripePromise;
-		const { error } = await stripe.redirectToCheckout({
-			lineItems: [
-				{
-					price: "{{PRICE_ID}}", // Replace with the ID of your price
-					quantity: 1,
-				},
-			],
-			mode: "payment",
-			successUrl: "https://example.com/success",
-			cancelUrl: "https://example.com/cancel",
-		});
-		// If `redirectToCheckout` fails due to a browser or network
-		// error, display the localized error message to your customer
-		// using `error.message`.
+		// Add a check to see if the user is actually paid
+		// Maybe using a firebase collection?
+		// Generate a random order number and then check if it exists in the collection
+		// When the user is sent to payment, check if the order number exists in the collection
+
+		if (stripe) {
+			const { error } = await stripe.redirectToCheckout({
+				lineItems: stripeCart,
+				mode: "payment",
+				successUrl: "http://localhost:3000/payment",
+				cancelUrl: "http://localhost:3000/cart",
+				customerEmail: userEmail,
+			});
+		}
 	};
 
 	return (
