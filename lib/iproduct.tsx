@@ -18,6 +18,8 @@ export interface IProduct {
 	imageUrl?: string;
 	publishedAt?: Date;
 	vintage?: number;
+
+	priceId?: string[];
 }
 
 export interface IProductSaved extends IProduct {

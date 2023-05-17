@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { getAuth } from "firebase/auth";
+import { loadStripe } from "@stripe/stripe-js";
 import { useCartStore } from "@/lib/cartzustand";
 import { useContentfulStore } from "@/lib/contentfulzustand";
 import { useRouter } from "next/router";
+
+const stripePromise = loadStripe(
+	"pk_test_51Mng5vAtLJGeuFzBmXqRMfQa5mSR5IOE6ZOoDI9K4eqofw1goFYXJegMSb8hEHWwEsRBbEOOV6tJ5PoOt1dYiUXt00fAFS94VQ"
+);
 
 export default function Cart() {
 	const { cartStore } = useCartStore();
@@ -32,6 +37,32 @@ export default function Cart() {
 	function loginWarning() {
 		alert("Du måste logga in!");
 	}
+
+	const handleClick = async (event) => {
+		let stripeCart = [];
+		cartStore.forEach((product) => {
+			stripeCart.push({
+				price: product.id,
+				quantity: product.amount,
+			});
+		});
+
+		const stripe = await stripePromise;
+		const { error } = await stripe.redirectToCheckout({
+			lineItems: [
+				{
+					price: "{{PRICE_ID}}", // Replace with the ID of your price
+					quantity: 1,
+				},
+			],
+			mode: "payment",
+			successUrl: "https://example.com/success",
+			cancelUrl: "https://example.com/cancel",
+		});
+		// If `redirectToCheckout` fails due to a browser or network
+		// error, display the localized error message to your customer
+		// using `error.message`.
+	};
 
 	return (
 		<>
@@ -87,8 +118,8 @@ export default function Cart() {
 						<p>{contentfulStore?.cartPage[0]}</p>
 					)}
 					{loggedIn && cartStore.length > 0 ? (
-						<button onClick={initiatePurchase}>
-							{contentfulStore?.cartPage[1]}
+						<button role="link" onClick={handleClick}>
+							Checkout
 						</button>
 					) : !loggedIn && cartStore.length > 0 ? (
 						<button onClick={loginWarning}>

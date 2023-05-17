@@ -204,7 +204,7 @@ export default function Admin() {
 			.value;
 		const price = (document.getElementById("price") as HTMLInputElement)
 			.value as string;
-		const description = (
+		let description = (
 			document.getElementById("description") as HTMLInputElement
 		).value;
 		const country = (document.getElementById("country") as HTMLInputElement)
@@ -249,6 +249,9 @@ export default function Admin() {
 			if (imageUrl === "") {
 				imageUrl = "https://pic8.co/sh/3SwSx0.png";
 			}
+			if (description === "") {
+				description = "Ingen beskrivning tillagd";
+			}
 
 			const product: IProduct = {
 				id: random,
@@ -256,7 +259,9 @@ export default function Admin() {
 				price: Number(newPrice),
 				description: description,
 				articleType: category,
-				articleTypeSlug: slugGenerator(category || "alkoholdryck"),
+				articleTypeSlug: slugTypeGenerator(
+					slugGenerator(category || "alkoholdryck")
+				),
 				country: country,
 				publishedAt: new Date(),
 				manufacturer: manufacturer,
@@ -268,9 +273,7 @@ export default function Admin() {
 				vintage: Number(vintage),
 			};
 
-			setDoc(doc(db, "products", random), product);
 			addToStripe(product);
-			setProductCreated(true);
 		} else {
 			console.log("Something went wrong");
 			console.log(validProductObject);
@@ -292,8 +295,19 @@ export default function Admin() {
 					currency: "sek",
 				},
 			})
-			.then((product: any) => {
+			.then(async (stripeProduct: any) => {
 				console.log("Product created in Stripe", product);
+				const priceId = await stripe.prices.list({
+					limit: 1,
+					product: stripeProduct.id,
+				});
+				product = {
+					...product,
+					priceId: [priceId.data[0].id],
+				};
+
+				setDoc(doc(db, "products", product.id), product);
+				setProductCreated(true);
 			})
 			.catch((error: any) => {
 				console.log("Error creating product in Stripe", error);
@@ -331,9 +345,8 @@ export default function Admin() {
 
 	// Cleans up the slug before returning it
 	function slugGenerator(string: string) {
-		return (string = string
+		return string
 			.toLowerCase()
-			.replaceAll("vin", "")
 			.replaceAll("å", "a")
 			.replaceAll("ä", "a")
 			.replaceAll("ö", "o")
@@ -349,6 +362,9 @@ export default function Admin() {
 			.replaceAll('"', "")
 			.replaceAll("(", "")
 			.replaceAll(")", "")
-			.replaceAll("?", ""));
+			.replaceAll("?", "");
+	}
+	function slugTypeGenerator(string: string) {
+		return string.replaceAll("-", "").replaceAll("vin", "").replaceAll(" ", "");
 	}
 }
