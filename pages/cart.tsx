@@ -72,8 +72,8 @@ export default function Cart() {
 											? contentfulStore?.cartPage[7]
 											: product.articleType === "sprit"
 											? contentfulStore?.cartPage[8]
-											: product.articleType.charAt(0).toUpperCase() +
-											  product.articleType.slice(1)}
+											: product.articleType?.charAt(0).toUpperCase() +
+											  product.articleType?.slice(1)}
 									</div>
 									<div className="text-orange-400">{product.amount} st</div>
 								</div>
