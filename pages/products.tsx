@@ -124,9 +124,9 @@ export default function Products() {
 								)}
 							</div>
 							<Link href={`/products/${product.id}`}>
-								<h2>{product.name}</h2>
+								<h2>{product?.name}</h2>
 							</Link>
-							<p>{product.description}</p>
+							<p>{product?.description}</p>
 						</div>
 					))}
 				</div>
