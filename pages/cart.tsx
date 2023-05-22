@@ -1,12 +1,13 @@
+import { doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import Head from "next/head";
 import Image from "next/image";
+import { db } from "@/components/firebase";
 import { getAuth } from "firebase/auth";
 import { loadStripe } from "@stripe/stripe-js";
 import { useCartStore } from "@/lib/cartzustand";
 import { useContentfulStore } from "@/lib/contentfulzustand";
-import { useRouter } from "next/router";
 
 const stripePromise = loadStripe(
 	"pk_test_51Mng5vAtLJGeuFzBmXqRMfQa5mSR5IOE6ZOoDI9K4eqofw1goFYXJegMSb8hEHWwEsRBbEOOV6tJ5PoOt1dYiUXt00fAFS94VQ"
@@ -15,14 +16,9 @@ const stripePromise = loadStripe(
 export default function Cart() {
 	const { cartStore } = useCartStore();
 	const [loggedIn, setLoggedIn] = useState(false);
-	const router = useRouter();
 	const { contentfulStore } = useContentfulStore();
 
 	const auth = getAuth();
-	function initiatePurchase() {
-		localStorage.setItem("validPurchase", "true");
-		router.push("/payment");
-	}
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
@@ -38,7 +34,7 @@ export default function Cart() {
 		alert("Du måste logga in!");
 	}
 
-	const handleClick = async (event) => {
+	const handleClick = async () => {
 		let stripeCart: { price: string | undefined; quantity: number }[] = [];
 		cartStore.forEach((product) => {
 			stripeCart.push({
@@ -53,16 +49,18 @@ export default function Cart() {
 			userEmail = auth.currentUser.email;
 		}
 		const stripe = await stripePromise;
-		// Add a check to see if the user is actually paid
-		// Maybe using a firebase collection?
-		// Generate a random order number and then check if it exists in the collection
-		// When the user is sent to payment, check if the order number exists in the collection
+
+		const randomOrderNumber = Math.floor(Math.random() * 1000000000);
+
+		setDoc(doc(db, "started_payments", randomOrderNumber.toString()), {
+			paid: false,
+		});
 
 		if (stripe) {
 			const { error } = await stripe.redirectToCheckout({
 				lineItems: stripeCart,
 				mode: "payment",
-				successUrl: "http://localhost:3000/payment",
+				successUrl: "http://localhost:3000/success/" + randomOrderNumber,
 				cancelUrl: "http://localhost:3000/cart",
 				customerEmail: userEmail,
 			});
