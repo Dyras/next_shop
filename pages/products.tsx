@@ -198,7 +198,7 @@ export default function Products() {
 				title = "Mousserande viner";
 				break;
 			case "ol":
-				title = "Öler";
+				title = "Öl";
 				break;
 			default:
 				title = "Alla viner";
