@@ -116,10 +116,14 @@ export default function Navbar() {
 					<Link href="/cart">
 						{contentfulStore?.navbar[2]}
 						{cartAmount > 0 ? (
-							<div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-red-100">
+							<div className="mr-2 inline justify-center rounded-full bg-red-600 px-2 py-1 font-mono text-xs font-bold text-red-100">
 								{cartAmount}
 							</div>
-						) : null}
+						) : (
+							<div className="mr-2 inline justify-center px-2 py-1 font-mono text-xs font-bold opacity-0">
+								0
+							</div>
+						)}
 					</Link>
 				</li>
 				<li>
